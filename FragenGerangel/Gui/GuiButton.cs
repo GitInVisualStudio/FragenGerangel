@@ -15,12 +15,52 @@ namespace FragenGerangel.Gui
         private const float DEFAULT_WIDTH = 100; 
         private const float DEFAULT_HEIGHT = 20;
         private Color hoverColor;
-        private Color currentColor;
-        public Color HoverColor { get => hoverColor; set => hoverColor = value; }
         private Action customRender = null;
+        private Color currentColor;
 
-        public override Color BackColor { get => base.BackColor; set => currentColor = base.BackColor = value; }
-        public Action CustomRender { get => customRender; set => customRender = value; }
+        public Action CustomRender
+        {
+            get
+            {
+                return customRender;
+            }
+
+            set
+            {
+                customRender = value;
+            }
+        }
+
+        public Color CurrentColor
+        {
+            get
+            {
+                return currentColor;
+            }
+
+            set
+            {
+                currentColor = value;
+            }
+        }
+
+        public Color HoverColor
+        {
+            get
+            {
+                return hoverColor;
+            }
+
+            set
+            {
+                hoverColor = value;
+            }
+        }
+
+        //public Color HoverColor { get => hoverColor; set => hoverColor = value; }
+
+        //public override Color BackColor { get => base.BackColor; set => currentColor = base.BackColor = value; }
+        //public Action CustomRender { get => customRender; set => customRender = value; }
 
         //TODO: den kack mit den Size fixen lol idk wie ich es machen soll
         public GuiButton(string name) : base(0, 0)
@@ -40,12 +80,12 @@ namespace FragenGerangel.Gui
             base.Init();
             OnEnter += (object sender, Vector location) =>
             {
-                currentColor = HoverColor;
+                CurrentColor = HoverColor;
             };
 
             OnLeave += (object sender, Vector location) =>
             {
-                currentColor = BackColor;
+                CurrentColor = BackColor;
             };
         }
 
@@ -53,15 +93,15 @@ namespace FragenGerangel.Gui
         {
             //throw new NotImplementedException();
             //TODO: Render the shit
-            if (customRender == null)
+            if (CustomRender == null)
             {
-                StateManager.SetColor(currentColor);
+                StateManager.SetColor(CurrentColor);
                 StateManager.FillRect(Location, Size);
                 StateManager.SetColor(FontColor);
                 StateManager.DrawCenteredString(Name, Location + Size / 2);
             }
             else
-                customRender.Invoke();
+                CustomRender.Invoke();
         }
     }
 }

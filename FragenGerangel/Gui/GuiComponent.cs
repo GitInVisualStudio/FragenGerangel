@@ -54,14 +54,118 @@ namespace FragenGerangel.Gui
             }
         }
 
-        public string Name { get => name; set => name = value; }
-        public bool Selected { get => selected; set => selected = value; }
-        public virtual Color BackColor { get => backColor; set => backColor = value; }
-        public Color FontColor { get => fontColor; set => fontColor = value; }
-        public float RX { get => rX; set => rX = value; }
-        public float RY { get => rY; set => rY = value; }
-        public float RWidth { get => rWidth; set => rWidth = value; }
-        public float RHeight { get => rHeight; set => rHeight = value; }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                name = value;
+            }
+        }
+
+        public bool Selected
+        {
+            get
+            {
+                return selected;
+            }
+
+            set
+            {
+                selected = value;
+            }
+        }
+
+        public Color BackColor
+        {
+            get
+            {
+                return backColor;
+            }
+
+            set
+            {
+                backColor = value;
+            }
+        }
+
+        public Color FontColor
+        {
+            get
+            {
+                return fontColor;
+            }
+
+            set
+            {
+                fontColor = value;
+            }
+        }
+
+        public float RX
+        {
+            get
+            {
+                return rX;
+            }
+
+            set
+            {
+                rX = value;
+            }
+        }
+
+        public float RY
+        {
+            get
+            {
+                return rY;
+            }
+
+            set
+            {
+                rY = value;
+            }
+        }
+
+        public float RWidth
+        {
+            get
+            {
+                return rWidth;
+            }
+
+            set
+            {
+                rWidth = value;
+            }
+        }
+
+        public float RHeight
+        {
+            get
+            {
+                return rHeight;
+            }
+
+            set
+            {
+                rHeight = value;
+            }
+        }
+
+        //public string Name { get => name; set => name = value; }
+        //public bool Selected { get => selected; set => selected = value; }
+        //public virtual Color BackColor { get => backColor; set => backColor = value; }
+        //public Color FontColor { get => fontColor; set => fontColor = value; }
+        //public float RX { get => rX; set => rX = value; }
+        //public float RY { get => rY; set => rY = value; }
+        //public float RWidth { get => rWidth; set => rWidth = value; }
+        //public float RHeight { get => rHeight; set => rHeight = value; }
 
         public void Component_OnResize(Vector size) => OnResize?.Invoke(this, size);
         public void Component_OnClick(Vector location) => OnClick?.Invoke(this, location);
@@ -91,7 +195,7 @@ namespace FragenGerangel.Gui
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public GuiComponent(float x, float y) => Location = new Vector(x, y);
+        public GuiComponent(float x, float y) { Location = new Vector(x, y); }
 
         public GuiComponent(float x, float y, float width, float height)
         {

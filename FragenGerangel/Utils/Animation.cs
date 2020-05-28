@@ -16,9 +16,49 @@ namespace FragenGerangel.Utils
         private bool reverse;
         public event EventHandler<bool> OnFinish;
         public bool Incremental => !reverse;
-        public float Delta { get => delta; set => delta = value; }
-        public float Speed { get => speed; set => speed = value; }
-        public bool Finished { get => finished; set => finished = value; }
+
+        public bool Finished
+        {
+            get
+            {
+                return finished;
+            }
+
+            set
+            {
+                finished = value;
+            }
+        }
+
+        public float Speed
+        {
+            get
+            {
+                return speed;
+            }
+
+            set
+            {
+                speed = value;
+            }
+        }
+
+        public float Delta
+        {
+            get
+            {
+                return delta;
+            }
+
+            set
+            {
+                delta = value;
+            }
+        }
+
+        //public float Delta { get => delta; set => delta = value; }
+        //public float Speed { get => speed; set => speed = value; }
+        //public bool Finished { get => finished; set => finished = value; }
 
         public Animation(float speed = 1.0f)
         {
@@ -28,8 +68,8 @@ namespace FragenGerangel.Utils
 
         public void Reset()
         {
-            delta = 0;
-            finished = false;
+            Delta = 0;
+            Finished = false;
         }
 
         public virtual void Fire()
@@ -45,8 +85,8 @@ namespace FragenGerangel.Utils
         private void _OnFinish()
         {
             OnFinish?.Invoke(this, reverse);
-            finished = false;
-            delta = 1;
+            Finished = false;
+            Delta = 1;
         }
 
         public virtual void Reverse()
@@ -59,13 +99,13 @@ namespace FragenGerangel.Utils
         {
             if (reverse)
             {
-                delta -= delta * StateManager.delta * speed * 3.0f;
-                if (delta < tolerance)
+                Delta -= Delta * StateManager.delta * Speed * 3.0f;
+                if (Delta < tolerance)
                     _OnFinish();
                 return;
             }
-            delta += (1 - delta) * StateManager.delta * speed * 3.0f;
-            if (delta > 1 - tolerance)
+            Delta += (1 - Delta) * StateManager.delta * Speed * 3.0f;
+            if (Delta > 1 - tolerance)
                 _OnFinish();
         }
     }
