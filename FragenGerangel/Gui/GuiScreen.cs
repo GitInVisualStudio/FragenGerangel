@@ -28,16 +28,20 @@ namespace FragenGerangel.Gui
 
         public GuiScreen() : base()
         {
+            RWidth = 1;
+            RHeight = 1;
         }
 
 
         public void Open()
         {
+            Opend = true;
             //animation.StartAnimation();
         }
 
         public void Close()
         {
+            Opend = false;
             //animation.InvertAnimation();
         }
     }

@@ -80,12 +80,13 @@ namespace FragenGerangel.Utils
         public virtual void Stop()
         {
             _OnFinish();
+            Finished = true;
+            Delta = 1;
         }
 
         private void _OnFinish()
         {
             OnFinish?.Invoke(this, reverse);
-            Finished = false;
             Delta = 1;
         }
 
