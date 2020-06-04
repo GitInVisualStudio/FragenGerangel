@@ -43,7 +43,8 @@ namespace FragenGerangel
             timer.Tick += Timer_Tick;
             timer.Start();
 
-            OpenScreen(new GuiTestScreen());
+            FontUtils.Init(this);
+            OpenScreen(new GuiQuestion());
 
             StateManager.Push();
             //currentScreen.Init();
@@ -94,8 +95,10 @@ namespace FragenGerangel
                 loadingScreen.SetLocationAndSize(this, Size);
                 loadingScreen.Init();
                 next.SetLocationAndSize(this, Size);
+                currentScreen?.Close();
                 loadingScreen.Open();
                 next.Init();
+                next.Open();
                 while (loadingScreen != null && loadingScreen.Opend)
                     Thread.Sleep(100);
                 currentScreen = next;
@@ -115,11 +118,11 @@ namespace FragenGerangel
             StateManager.Push();
             StateManager.Update(e.Graphics);
             StateManager.SetFont(FontUtils.DEFAULT_FONT);
-            AnimationManager.Update();
             #region drawing
             currentScreen?.OnRender();
             loadingScreen?.OnRender();
             #endregion stopDrawing
+            AnimationManager.Update();
             StateManager.Pop();
         }
     }

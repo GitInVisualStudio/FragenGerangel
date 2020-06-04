@@ -149,7 +149,6 @@ namespace FragenGerangel.Utils.Render
 
         public static void DrawCircle(Vector position, float r) => DrawCircle(position.X, position.Y, r);
         
-
         /// <summary>
         /// Zeichnet eine Linie
         /// </summary>

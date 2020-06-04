@@ -234,7 +234,6 @@ namespace FragenGerangel.Gui
         {
             OnResize += SetLocationAndSize;
             BackColor = Color.Gray;
-            FontColor = Color.Black;
         }
         
 

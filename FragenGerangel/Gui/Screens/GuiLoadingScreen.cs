@@ -13,7 +13,7 @@ namespace FragenGerangel.Gui.Screens
     public class GuiLoadingScreen : GuiScreen
     {
         private GuiScreen next, current;
-        private Animation animation;
+        //private Animation animation;
         private float time;
 
         public GuiLoadingScreen(GuiScreen nextScreen, GuiScreen currentScreen) : base()
@@ -36,13 +36,27 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        public override void Open()
+        {
+            Opend = true;
+        }
+
+        public override void Close()
+        {
+            Opend = false;
+        }
+
         public override void OnRender()
         {
             base.OnRender();
             if (!Opend)
                 return;
-            StateManager.SetColor(0, 0, 0, (int)(50 * animation.Delta));
-            StateManager.FillRect(Location, Size);
+            //StateManager.SetColor(0, 0, 0, (int)(50 * animation.Delta));
+            //StateManager.FillRect(Location, Size);
+            //next.OnRender();
+            Color c1 = Color.FromArgb((int)(255 * animation.Delta), 2, 175, 230);
+            Color c2 = Color.FromArgb((int)(255 * animation.Delta), 84, 105, 230);
+            StateManager.FillGradientRect(Location, Size, c1, c2);
 
             time += StateManager.delta * 100 * 3;
 
@@ -63,7 +77,6 @@ namespace FragenGerangel.Gui.Screens
                 prevPoint = newPoint;
             }
             StateManager.Pop();
-            
         }
     }
 }

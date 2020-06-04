@@ -79,7 +79,7 @@ namespace FragenGerangel.Gui
             animation.Fire();
             for (int i = 0; i < points.Length; i++)
             {
-                points[i] = new PointF(point.X, point.Y);
+                //points[i] = new PointF(point.X, point.Y);
             }
         }
 
@@ -113,29 +113,10 @@ namespace FragenGerangel.Gui
                 
 
                 StateManager.SetColor(CurrentColor);
-                StateManager.FillRoundRect(Location, Size, 5);
+                Color c2 = Color.FromArgb(120, 190, 60);
+                StateManager.FillGradientRoundRect(Location, Size, Color.LawnGreen, c2, 90, 10);
                 StateManager.SetColor(FontColor);
                 StateManager.DrawCenteredString(Name, Location + Size / 2);
-                if (!animation.Finished)
-                {
-                    StateManager.Push();
-                    //StateManager.Translate(Location - point + Size);
-                    int k = 0;
-                    for(float i = 0; i < 360 ; i+= 360.0f / points.Length, k++)
-                    {
-                        points[k] = new PointF(point.X + MathUtils.Sin(i) * Size.Length * animation.Delta, point.Y + MathUtils.Cos(i) * Size.Length * animation.Delta);
-                        PointF[] a = StateManager.GetRoundRectPoints(Location.X, Location.Y, Size.X, Size.Y, 5, 100);
-                        if (!MathUtils.IsInPolygon(a, points[k]))
-                        {
-                            if(k > 0)
-                                points[k] = a[k];
-                            //k--;
-                        }
-                    }
-
-                    StateManager.FillPolygon(points);
-                    StateManager.Pop();
-                }
             }
             else
                 CustomRender.Invoke();
