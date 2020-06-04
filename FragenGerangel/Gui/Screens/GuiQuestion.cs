@@ -26,6 +26,40 @@ namespace FragenGerangel.Gui.Screens
                 RWidth = 1,
                 FontColor = Color.White
             });
+            Components.Add(new GuiButton("Antwort1")
+            {
+                Size = new Vector(0, 0),
+                Location = new Vector(5, 5),
+                RY = 0.5f,
+                RWidth = 0.5f,
+                RHeight = 0.15f,
+                FontColor = Color.White
+            });
+            Components.Add(new GuiButton("Antwort2")
+            {
+                Size = new Vector(0, 0),
+                Location = new Vector(5, 10),
+                RY = 0.65f,
+                RWidth = 0.5f,
+                RHeight = 0.15f,
+                FontColor = Color.White
+            });
+            //Components.Add(new GuiButton("Antwort2")
+            //{
+            //    Size = new Vector(-27, 100),
+            //    Location = new Vector(5, -150),
+            //    RY = 1,
+            //    RWidth = 1,
+            //    FontColor = Color.White
+            //});
+            //Components.Add(new GuiButton("Antwort2")
+            //{
+            //    Size = new Vector(-27, 100),
+            //    Location = new Vector(5, -150),
+            //    RY = 1,
+            //    RWidth = 1,
+            //    FontColor = Color.White
+            //});
             base.Init();
         }
 
@@ -40,11 +74,6 @@ namespace FragenGerangel.Gui.Screens
             StateManager.FillGradientRect(Location, new Vector(Size.X, height), c1, c2);
             StateManager.SetColor(Color.White);
             StateManager.FillRoundRect(5, height / 2, Size.X - 27, Size.Y / 5 * 2);
-
-            height = height / 2 + Size.Y / 5 * 2;
-            float diff = Components[0].Location.Y - height;
-            StateManager.FillRoundRect(5, height + 5, (Size.X - 10) / 2, diff / 2 - 10);
-            StateManager.FillRoundRect(5, height + diff / 2 + 5, (Size.X - 10) / 2, diff / 2 - 10);
         }
 
     }

@@ -54,6 +54,8 @@ namespace FragenGerangel.Gui.Screens
             //StateManager.SetColor(0, 0, 0, (int)(50 * animation.Delta));
             //StateManager.FillRect(Location, Size);
             //next.OnRender();
+            if (animation.Delta == 0)
+                return;
             Color c1 = Color.FromArgb((int)(255 * animation.Delta), 2, 175, 230);
             Color c2 = Color.FromArgb((int)(255 * animation.Delta), 84, 105, 230);
             StateManager.FillGradientRect(Location, Size, c1, c2);
