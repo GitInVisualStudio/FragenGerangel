@@ -226,14 +226,15 @@ namespace FragenGerangel.Utils.API
             return new Question(question, category, correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3);
         }
 
-        public async Task UploadQuestionAnswer(QuestionAnswer qa)
+        public async Task<float?> UploadQuestionAnswer(QuestionAnswer qa)
         {
             JObject json = new JObject();
             json["auth"] = auth;
             json["id"] = qa.OnlineID;
             json["answer"] = qa.AnswerPlayer;
-            await PostReturnJson("uploadQuestionAnswer.php", json).ConfigureAwait(false);
-        }
+            JObject resultJson = await PostReturnJson("uploadQuestionAnswer.php", json).ConfigureAwait(false);
+            return resultJson["deltaElo"].ToObject<float>();
+        } 
 
         private async Task GetGame(Game g)
         {
@@ -259,7 +260,10 @@ namespace FragenGerangel.Utils.API
                 foreach (QuestionAnswer q in g.LastRound.Questions)
                 {
                     q.AnswerPlayer = new Random().Next(4);
-                    await UploadQuestionAnswer(q).ConfigureAwait(false);
+                    float? eloChange = await UploadQuestionAnswer(q).ConfigureAwait(false);
+                    if (eloChange != null)
+                        Console.WriteLine("Elo-Change for this game for " + username + ": " + eloChange);
+                    g.EloChange = eloChange;
                 }
 
             try

@@ -13,6 +13,7 @@ namespace FragenGerangel.GameBase
         private Player remotePlayer;
         private Round[] rounds;
         private int onlineID;
+        private float? eloChange;
 
         public Player RemotePlayer
         {
@@ -82,6 +83,11 @@ namespace FragenGerangel.GameBase
         }
 
         public int OnlineID { get => onlineID; set => onlineID = value; }
+
+        /// <summary>
+        /// How this game influenced the player's elo
+        /// </summary>
+        public float? EloChange { get => eloChange; set => eloChange = value; } // TODO: jamin fragen ob das serverside gespeichert werden soll
 
         public Game(Player remote, int onlineID)
         {
