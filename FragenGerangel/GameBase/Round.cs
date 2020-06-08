@@ -10,39 +10,40 @@ namespace FragenGerangel.GameBase
     [JsonObject(MemberSerialization.Fields)]
     public class Round
     {
-        private string category;
-        private Question[] questions;
+        private int onlineID;
+        private QuestionAnswer[] questions;
+        private string[] possibleCategories;
 
         public string Category
         {
             get
             {
-                return category;
-            }
-
-            set
-            {
-                category = value;
+                if (questions == null || questions.First().Question == null)
+                    return null;
+                else
+                    return questions.First().Question.Category;
             }
         }
 
-        public Question[] Questions
+        public QuestionAnswer[] Questions
         {
             get
             {
                 return questions;
             }
-
             set
             {
                 questions = value;
             }
         }
 
-        public Round(string category, Question q1, Question q2, Question q3)
+        public string[] PossibleCategories { get => possibleCategories; set => possibleCategories = value; }
+        public int OnlineID { get => onlineID; set => onlineID = value; }
+
+        public Round(int onlineID, string category1, string category2, string category3)
         {
-            this.category = category;
-            this.questions = new Question[] { q1, q2, q3 };
+            this.onlineID = onlineID;
+            this.possibleCategories = new string[] { category1, category2, category3 };
         }
     }
 }

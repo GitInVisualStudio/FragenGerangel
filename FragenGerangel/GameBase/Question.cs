@@ -12,12 +12,9 @@ namespace FragenGerangel.GameBase
     {
         private string category;
         private string question;
-        private Answer[] answers; // first answer is always correct one
-        private Answer answerRemotePlayer;
-        private Answer answerPlayer;
-        private int onlineID;
+        private string[] answers; // first answer is always correct one
 
-        private Answer Correct
+        private string Correct
         {
             get
             {
@@ -51,56 +48,11 @@ namespace FragenGerangel.GameBase
             }
         }
 
-        public Answer AnswerRemotePlayer
-        {
-            get
-            {
-                return answerRemotePlayer;
-            }
-
-            set
-            {
-                answerRemotePlayer = value;
-            }
-        }
-
-        public Answer AnswerPlayer
-        {
-            get
-            {
-                return answerPlayer;
-            }
-
-            set
-            {
-                answerPlayer = value;
-            }
-        }
-
-        public int OnlineID
-        {
-            get
-            {
-                return onlineID;
-            }
-
-            set
-            {
-                onlineID = value;
-            }
-        }
-
-        public Question(string question, string category, Answer correct, Answer wrong1, Answer wrong2, Answer wrong3, Answer answerPlayer, Answer answerRemotePlayer, int onlineID)
+        public Question(string question, string category, string correct, string wrong1, string wrong2, string wrong3)
         {
             this.question = question;
-            correct.Question = this;
-            wrong1.Question = this;
-            wrong2.Question = this;
-            wrong3.Question = this;
-            this.answers = new Answer[] { correct, wrong1, wrong2, wrong3 };
-            this.answerPlayer = answerPlayer;
-            this.answerRemotePlayer = answerRemotePlayer;
-            this.onlineID = onlineID;
+            this.category = category;
+            this.answers = new string[] { correct, wrong1, wrong2, wrong3 };
         }
     }
 }

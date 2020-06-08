@@ -14,21 +14,31 @@ namespace ServerInit
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Reading questions...");
             List<List<string>> questions = GetQuestions();
             string query = "INSERT INTO `question` (`question`, `category`, `correct_answer`, `wrong_answer_1`, `wrong_answer_2`, `wrong_answer_3`) VALUES ";
-            foreach (List<string> question in questions)
+            for(int i = 0; i < questions.Count; i++)
             {
+                if (questions[i].Count != 6)
+                    continue;
                 query += "(";
-                foreach (string part in question)
-                    query += "\"" + part + "\",";
-                query.Remove(query.Length - 1);
-                query += ")";
+                foreach (string part in questions[i])
+                    query += '"' + Regex.Replace(DBConnection.MySQLEscape(part), "'", "''") + '"' + ',';
+                query = query.Remove(query.Length - 1);
+                query += "),";
             }
-
+            query = query.Remove(query.Length - 1);
+            Console.WriteLine("Establishing MySQL connection...");
             DBConnection conn = new DBConnection("localhost", "root", "");
-            conn.ExecuteNonQuery(Regex.Replace(ReadResourceFile("db_init.sql"), "\r\n", "\n"));
+            Console.WriteLine("Reading DB-Init commands...");
+            string nonQuery = Regex.Replace(ReadResourceFile("db_init.sql"), "\r\n", "\n");
+            Console.WriteLine("Executing commands...");
+            conn.ExecuteNonQuery(nonQuery);
             conn.Database = "FragenGerangel";
+            Console.WriteLine("Inserting questions...");
             conn.Query(query);
+            Console.WriteLine("Database established. Press any key to exit.");
+            Console.ReadKey();
         }
 
         private static List<List<string>> GetQuestions()

@@ -1,5 +1,7 @@
-﻿using FragenGerangel.Gui;
+﻿using FragenGerangel.GameBase;
+using FragenGerangel.Gui;
 using FragenGerangel.Utils;
+using FragenGerangel.Utils.API;
 using FragenGerangel.Utils.Math;
 using FragenGerangel.Utils.Render;
 using System;
@@ -47,6 +49,15 @@ namespace FragenGerangel
             StateManager.Push();
 
             //currentScreen.Init();
+            APIManager k = new APIManager("kaminund", "12345");
+            APIManager y = new APIManager("yamimiriam", "12345");
+            k.StartDuel(new Player("yamimiriam")).Wait();
+            y.StartDuel(new Player("kaminund")).Wait();
+            while (true)
+            {
+                k.Test().Wait();
+                y.Test().Wait();
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)

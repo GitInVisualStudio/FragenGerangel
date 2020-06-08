@@ -10,21 +10,7 @@ namespace FragenGerangel.GameBase
     [JsonObject(MemberSerialization.Fields)]
     public class Player
     {
-        private int onlineID;
         private string name;
-
-        public int OnlineID
-        {
-            get
-            {
-                return onlineID;
-            }
-
-            set
-            {
-                onlineID = value;
-            }
-        }
 
         public string Name
         {
@@ -39,9 +25,8 @@ namespace FragenGerangel.GameBase
             }
         }
 
-        public Player(int onlineID, string name)
+        public Player(string name)
         {
-            this.onlineID = onlineID;
             this.name = name;
         }
     }

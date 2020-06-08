@@ -56,10 +56,10 @@
     <Compile Include="FragenGerangel.Designer.cs">
       <DependentUpon>FragenGerangel.cs</DependentUpon>
     </Compile>
-    <Compile Include="GameBase\Answer.cs" />
     <Compile Include="GameBase\Game.cs" />
     <Compile Include="GameBase\Player.cs" />
     <Compile Include="GameBase\Question.cs" />
+    <Compile Include="GameBase\QuestionAnswer.cs" />
     <Compile Include="GameBase\Round.cs" />
     <Compile Include="GameBase\Statistic.cs" />
     <Compile Include="Gui\GuiButton.cs" />

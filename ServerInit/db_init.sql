@@ -6,15 +6,13 @@ USE FragenGerangel;
 -- TABLE User
 
 CREATE TABLE IF NOT EXISTS `FragenGerangel`.`user` (
-	`id` BIGINT NOT NULL AUTO_INCREMENT,
-	`email` VARCHAR(64) NOT NULL,
 	`username` VARCHAR(32) NOT NULL,
 	`password` CHAR(64) NOT NULL,
 	`salt` INT NOT NULL,
 	`auth` CHAR(64) NULL,
 	`auth_since` DATETIME NULL,
 	`elo` INT NOT NULL DEFAULT 1500,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`username`)
 )
 ENGINE=InnoDB;
 
@@ -35,51 +33,55 @@ ENGINE=InnoDB;
 -- TABLE user_is_friends
 
 CREATE TABLE IF NOT EXISTS `FragenGerangel`.`user_is_friends` (
-	`sender` BIGINT NOT NULL AUTO_INCREMENT,
-	`reciever` BIGINT NOT NULL,
+	`sender` VARCHAR(32) NOT NULL,
+	`reciever` VARCHAR(32) NOT NULL,
 	`accepted` BOOLEAN,
 	`since` DATETIME NOT NULL,
 	PRIMARY KEY (`sender`, `reciever`),
-	FOREIGN KEY (`sender`) REFERENCES `FragenGerangel`.`user`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (`reciever`) REFERENCES `FragenGerangel`.`user`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY (`sender`) REFERENCES `FragenGerangel`.`user`(`username`) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`reciever`) REFERENCES `FragenGerangel`.`user`(`username`) ON UPDATE CASCADE ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 
 -- TABLE Game
 
-CREATE TABLE IF NOT EXISTS `FragenGerangel`.`Game` (
+CREATE TABLE IF NOT EXISTS `FragenGerangel`.`game` (
 	`id` BIGINT NOT NULL AUTO_INCREMENT,
-	`player_1` BIGINT NULL,
-	`player_2` BIGINT NULL,
-	`won_by` BIGINT NULL,
+	`player_1` VARCHAR(32) NULL,
+	`player_2` VARCHAR(32) NULL,
+	`won_by` TINYINT NULL,
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`player_1`) REFERENCES `FragenGerangel`.`user`(`id`) ON UPDATE CASCADE ON DELETE SET NULL,
-	FOREIGN KEY (`player_2`) REFERENCES `FragenGerangel`.`user`(`id`) ON UPDATE CASCADE ON DELETE SET NULL,
-	FOREIGN KEY (`won_by`) REFERENCES `FragenGerangel`.`user`(`id`) ON UPDATE CASCADE ON DELETE SET NULL
+	FOREIGN KEY (`player_1`) REFERENCES `FragenGerangel`.`user`(`username`) ON UPDATE CASCADE ON DELETE SET NULL,
+	FOREIGN KEY (`player_2`) REFERENCES `FragenGerangel`.`user`(`username`) ON UPDATE CASCADE ON DELETE SET NULL
 )
 ENGINE=InnoDB;
 
 -- TABLE Round
 
-CREATE TABLE IF NOT EXISTS `FragenGerangel`.`Round` ( 
+CREATE TABLE IF NOT EXISTS `FragenGerangel`.`round` ( 
 	`id` BIGINT NOT NULL AUTO_INCREMENT,
-	`game_id` BIGINT NOT NULL,
+	`game` BIGINT NOT NULL,
 	`order` TINYINT NOT NULL,
-	`category` VARCHAR(128) NOT NULL,
-	PRIMARY KEY (`id`)
+	`cat_1` VARCHAR(128) NOT NULL,
+	`cat_2` VARCHAR(128) NOT NULL,
+	`cat_3` VARCHAR(128) NOT NULL,
+	`category` TINYINT NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`game`) REFERENCES `FragenGerangel`.`game`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 
 -- TABLE QuestionAnswer
 
-CREATE TABLE IF NOT EXISTS `FragenGerangel`.`QuestionAnswer` (
+CREATE TABLE IF NOT EXISTS `FragenGerangel`.`question_answer` (
+	`id` BIGINT NOT NULL AUTO_INCREMENT,
 	`round` BIGINT NOT NULL,
 	`order` TINYINT NOT NULL,
 	`question` BIGINT NOT NULL,
 	`answer_player_1` TINYINT NULL,
 	`answer_player_2` TINYINT NULL,
 	PRIMARY KEY(`id`),
-	FOREIGN KEY (`round`) REFERENCES `FragenGerangel`.`Round`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (`question`) REFERENCES `FragenGerangel`.`Question`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`round`) REFERENCES `FragenGerangel`.`round`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`question`) REFERENCES `FragenGerangel`.`question`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )
 ENGINE=InnoDB;
