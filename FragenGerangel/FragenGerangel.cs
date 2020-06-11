@@ -1,6 +1,7 @@
-﻿using FragenGerangel.Gui;
+using FragenGerangel.Gui;
 using FragenGerangel.Gui.Screens;
 using FragenGerangel.Utils;
+using FragenGerangel.Utils.API;
 using FragenGerangel.Utils.Math;
 using FragenGerangel.Utils.Render;
 using System;
@@ -47,7 +48,6 @@ namespace FragenGerangel
             OpenScreen(new GuiQuestion());
 
             StateManager.Push();
-            //currentScreen.Init();
         }
 
         private void Timer_Tick(object sender, EventArgs e)

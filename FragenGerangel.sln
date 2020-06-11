@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.779
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FragenGerangel", "FragenGerangel\FragenGerangel.csproj", "{DA2608C3-FF6B-4587-B08D-73D9B7C71391}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerInit", "ServerInit\ServerInit.csproj", "{372CC730-3B07-40C7-8F55-829C6EC83F62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DA2608C3-FF6B-4587-B08D-73D9B7C71391}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA2608C3-FF6B-4587-B08D-73D9B7C71391}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA2608C3-FF6B-4587-B08D-73D9B7C71391}.Release|Any CPU.Build.0 = Release|Any CPU
+		{372CC730-3B07-40C7-8F55-829C6EC83F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{372CC730-3B07-40C7-8F55-829C6EC83F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{372CC730-3B07-40C7-8F55-829C6EC83F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{372CC730-3B07-40C7-8F55-829C6EC83F62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
