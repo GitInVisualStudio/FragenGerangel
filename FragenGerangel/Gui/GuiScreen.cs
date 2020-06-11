@@ -11,7 +11,7 @@ namespace FragenGerangel.Gui
     public class GuiScreen : GuiPanel
     {
         private bool opend;
-        //private Animation<float> animation = Animation<float>.GetDefaultAnimation();
+        protected Animation animation = new Animation();
 
         public bool Opend
         {
@@ -28,17 +28,25 @@ namespace FragenGerangel.Gui
 
         public GuiScreen() : base()
         {
+            RWidth = 1;
+            RHeight = 1;
+            animation.Reverse();
+            animation.OnFinish += Animation_OnFinish;
         }
 
-
-        public void Open()
+        private void Animation_OnFinish(object sender, bool e)
         {
-            //animation.StartAnimation();
+            opend = animation.Incremental;
         }
 
-        public void Close()
+        public virtual void Open()
         {
-            //animation.InvertAnimation();
+            animation.Reverse();
+        }
+
+        public virtual void Close()
+        {
+            animation.Reverse();            
         }
     }
 }

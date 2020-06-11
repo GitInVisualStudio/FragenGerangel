@@ -17,7 +17,20 @@ namespace FragenGerangel.Gui
         private int token;
         private Animation animation;
 
-        public bool Enabled { get => enabled; set => enabled = value; }
+        public bool Enabled
+        {
+            get
+            {
+                return enabled;
+            }
+
+            set
+            {
+                enabled = value;
+            }
+        }
+
+        //public bool Enabled { get => enabled; set => enabled = value; }
 
         public GuiCheckBox()
         {
@@ -40,9 +53,9 @@ namespace FragenGerangel.Gui
 
             if (!animation.Incremental && animation.Delta < 0.1f)
             {
-                enabled = !enabled;
-                OnChange?.Invoke(this, enabled);
-                token = enabled ? 10004 : 10007;
+                Enabled = !Enabled;
+                OnChange?.Invoke(this, Enabled);
+                token = Enabled ? 10004 : 10007;
                 animation.Reverse();
             }
             StateManager.Push();

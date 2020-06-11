@@ -149,7 +149,6 @@ namespace FragenGerangel.Utils.Render
 
         public static void DrawCircle(Vector position, float r) => DrawCircle(position.X, position.Y, r);
         
-
         /// <summary>
         /// Zeichnet eine Linie
         /// </summary>
@@ -295,6 +294,9 @@ namespace FragenGerangel.Utils.Render
                 g.SmoothingMode = SmoothingMode.AntiAlias;
         }
 
+        public static void DrawPolygon(PointF[] points) => g.DrawPolygon(new Pen(new SolidBrush(Color)), points);
+        public static void FillPolygon(PointF[] points) => g.FillPolygon(new SolidBrush(Color), points);
+
         public static void DrawRoundRect(Vector location, Vector size, float r = 10, int res = 100) 
             => g.DrawPolygon(new Pen(new SolidBrush(Color)), GetRoundRectPoints(location.X, location.Y, size.X, size.Y, r, res));
 
@@ -304,7 +306,7 @@ namespace FragenGerangel.Utils.Render
         public static void FillRoundRect(Vector location, Vector size, float r = 10, int res = 100) 
             => FillRoundRect(location.X, location.Y, size.X, size.Y, r, res);
 
-        private static PointF[] GetRoundRectPoints(float x, float y, float width, float height, float r, int res)
+        public static PointF[] GetRoundRectPoints(float x, float y, float width, float height, float r, int res)
         {
             if (height <= 0 || width <= 0)
                 return new PointF[0];

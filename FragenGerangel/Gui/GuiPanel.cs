@@ -12,6 +12,7 @@ namespace FragenGerangel.Gui
     public class GuiPanel : GuiComponent
     {
         private List<GuiComponent> components;
+        private Bitmap buffer;
 
         public List<GuiComponent> Components
         {
@@ -106,7 +107,9 @@ namespace FragenGerangel.Gui
 
         public override void OnRender()
         {
-            Bitmap buffer = new Bitmap((int)Size.X, (int)Size.Y);
+            if (Size.X < 1 || Size.Y < 1)
+                return;
+            buffer = new Bitmap((int)Size.X, (int)Size.Y);
             StateManager.Push();
             StateManager.Translate(-Location);
             StateManager.SetGraphics(Graphics.FromImage(buffer));

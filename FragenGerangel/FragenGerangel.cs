@@ -1,5 +1,5 @@
-﻿using FragenGerangel.GameBase;
 using FragenGerangel.Gui;
+using FragenGerangel.Gui.Screens;
 using FragenGerangel.Utils;
 using FragenGerangel.Utils.API;
 using FragenGerangel.Utils.Math;
@@ -11,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,9 +19,9 @@ namespace FragenGerangel
 {
     public partial class FragenGerangel : Form
     {
-        private Timer timer;
+        private System.Windows.Forms.Timer timer;
         public new Vector Size => new Vector(Width, Height);
-        private GuiScreen currentScreen;
+        private GuiScreen currentScreen, loadingScreen;
 
         public FragenGerangel()
         {
@@ -33,25 +34,25 @@ namespace FragenGerangel
             DoubleBuffered = true;
             Width = 1280;
             Height = 720;
+
             AddEvents();
-            timer = new Timer()
+
+            timer = new System.Windows.Forms.Timer()
             {
                 Interval = (int)(1000.0f / 60.0f)
             };
             timer.Tick += Timer_Tick;
             timer.Start();
 
-            box = new GuiCheckBox()
-            {
-                Location = new Vector(100, 100)
-            };
+            FontUtils.Init(this);
+            OpenScreen(new GuiQuestion());
 
             StateManager.Push();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            this.Refresh();
+            Refresh();
         }
 
         private void AddEvents()
@@ -60,7 +61,6 @@ namespace FragenGerangel
             {
                 Vector location = new Vector(e.X, e.Y);
                 currentScreen?.Component_OnClick(location);
-                box.Component_OnClick(location);
             };
             MouseUp += (object sender, MouseEventArgs e) =>
             {
@@ -83,15 +83,34 @@ namespace FragenGerangel
             Resize += (object sender, EventArgs args) =>
             {
                 currentScreen?.Component_OnResize(Size);
+                loadingScreen?.Component_OnResize(Size);
             };
         }
 
-        public void OpenScreen()
+        public void OpenScreen(GuiScreen next)
         {
-
+            new Thread(() =>
+            {
+                loadingScreen = new GuiLoadingScreen(next, currentScreen);
+                loadingScreen.SetLocationAndSize(this, Size);
+                loadingScreen.Init();
+                next.SetLocationAndSize(this, Size);
+                currentScreen?.Close();
+                loadingScreen.Open();
+                next.Init();
+                next.Open();
+                while (loadingScreen != null && loadingScreen.Opend)
+                    Thread.Sleep(100);
+                currentScreen = next;
+                loadingScreen = null;
+            }).Start();
         }
 
-        GuiCheckBox box;
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+            loadingScreen = null;
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -99,12 +118,11 @@ namespace FragenGerangel
             StateManager.Push();
             StateManager.Update(e.Graphics);
             StateManager.SetFont(FontUtils.DEFAULT_FONT);
-            AnimationManager.Update();
             #region drawing
             currentScreen?.OnRender();
-            StateManager.FillGradientRect(new Vector(100, 100), new Vector(500, 200), Color.Black, Color.Red, 0.0f);
-            box.OnRender();
+            loadingScreen?.OnRender();
             #endregion stopDrawing
+            AnimationManager.Update();
             StateManager.Pop();
         }
     }

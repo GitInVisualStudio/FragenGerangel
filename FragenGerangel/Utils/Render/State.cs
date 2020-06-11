@@ -123,7 +123,18 @@ namespace FragenGerangel.Utils.Render
             }
         }
 
-        public Graphics Graphics { get => graphics; set => graphics = value; }
+        public Graphics Graphics
+        {
+            get
+            {
+                return graphics;
+            }
+
+            set
+            {
+                graphics = value;
+            }
+        }
 
         public State(bool createNew = false)
         {
