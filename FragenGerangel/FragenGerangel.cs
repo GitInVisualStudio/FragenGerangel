@@ -51,8 +51,8 @@ namespace FragenGerangel
             //currentScreen.Init();
             APIManager k = new APIManager("kaminund", "12345");
             APIManager y = new APIManager("yamimiriam", "12345");
-            k.StartDuel(new Player("yamimiriam")).Wait();
             y.StartDuel(new Player("kaminund")).Wait();
+            k.StartDuel(new Player("yamimiriam")).Wait();
             while (true)
             {
                 k.Test().Wait();

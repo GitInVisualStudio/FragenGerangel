@@ -233,7 +233,7 @@ namespace FragenGerangel.Utils.API
             json["id"] = qa.OnlineID;
             json["answer"] = qa.AnswerPlayer;
             JObject resultJson = await PostReturnJson("uploadQuestionAnswer.php", json).ConfigureAwait(false);
-            return resultJson["deltaElo"].ToObject<float>();
+            return resultJson["deltaElo"]?.ToObject<float?>();
         } 
 
         private async Task GetGame(Game g)
@@ -252,9 +252,44 @@ namespace FragenGerangel.Utils.API
             return games;
         }
 
+        public async Task<Statistic> GetStatistics(Player p = null)
+        {
+            JObject json = new JObject();
+            json["auth"] = auth;
+            json["username"] = p == null ? username : p.Name;
+            JObject resultJson = await PostReturnJson("getStatistics.php", json).ConfigureAwait(false);
+            int elo = resultJson["elo"].ToObject<int>();
+            int wins = resultJson["wins"].ToObject<int>();
+            int draws = resultJson["draws"].ToObject<int>();
+            int losses = resultJson["losses"].ToObject<int>();
+            int perfectGames = resultJson["perfectGames"].ToObject<int>();
+            Dictionary<string, float> categoryPercentages = new Dictionary<string, float>();
+            foreach (JToken t in resultJson["categoryPercentages"])
+            {
+                string category = t["category"].ToObject<string>();
+                float percentage = t["percentage"].ToObject<float>();
+                categoryPercentages.Add(category, percentage);
+            }
+            return new Statistic()
+            {
+                ELO = elo,
+                Wins = wins,
+                Draws = draws,
+                Losses = losses,
+                PerfectGames = perfectGames,
+                CategoryPercentages = categoryPercentages,
+                Player = p == null ? new Player(username) : p
+            };
+        }
+
+
+        Game[] games;
         public async Task Test()
         {
-            Game[] games = await GetGames().ConfigureAwait(false);
+            //Statistic s = await GetStatistics().ConfigureAwait(false);
+            if (games == null)
+                games = await GetGames().ConfigureAwait(false);
+            await GetGame(games.Last()).ConfigureAwait(false);
             Game g = games.Last();
             if (g.LastRound.Questions != null)
                 foreach (QuestionAnswer q in g.LastRound.Questions)

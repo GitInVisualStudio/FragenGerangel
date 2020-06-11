@@ -35,12 +35,12 @@ namespace FragenGerangel.GameBase
         {
             get
             {
-                return ELO;
+                return elo;
             }
 
             set
             {
-                ELO = value;
+                elo = value;
             }
         }
 

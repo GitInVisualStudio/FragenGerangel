@@ -81,7 +81,7 @@ function main(array $post) : array {
 		
 		$connection->query("UPDATE game SET won_by = {$won_by} WHERE id = '{$game_id}'");
 		//print("updated elos. \nexpected score p1: {$expected_score_player_1}. actual score p1: {$actual_score_player_1}. delta elo: {$delta_elo_player_1}\nexpected score p2: {$expected_score_player_2}. actual score p2: {$actual_score_player_2}. delta elo: {$delta_elo_player_2}\n");
-		return ["result" => "ok", $delta_elo => $username == $player_1 ? $delta_elo_player_1 : $delta_elo_player_2];
+		return ["result" => "ok", "deltaElo" => $username == $player_1 ? $delta_elo_player_1 : $delta_elo_player_2];
 	}
 	
 	Globals::initializeNewRound($connection, $game_id);

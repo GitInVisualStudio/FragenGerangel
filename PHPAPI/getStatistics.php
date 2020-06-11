@@ -19,7 +19,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
 function main(array $post) : array {
     $connection = Globals::getDBConnection();
     
-    if (!(array_key_exists("auth", $post) && array_key_exists("username", $post))
+    if (!(array_key_exists("auth", $post) && array_key_exists("username", $post)))
         throw new MissingParameterException();
     
 	$username = Globals::getUsernameFromAuth($connection, $post["auth"]);
@@ -55,9 +55,25 @@ function main(array $post) : array {
 	$result = $result[0];
 	$draws = $result["num"];
 	
+	$result = $connection->query("SELECT DISTINCT category FROM question");
+	$percentages = [];
+	for ($i = 0; $i < sizeof($result); $i++) {
+		$category = $result[$i]["category"];
+		$answers = $connection->query("SELECT
+								g.player_1, g.player_2, a.answer_player_1, a.answer_player_2
+								FROM game g INNER JOIN `round` r ON r.game = g.id INNER JOIN question_answer a ON a.`round` = r.id INNER JOIN question q ON a.question = q.id
+								WHERE q.category = '{$category}' AND (player_1 = '{$username}' OR player_2 = '{$username}')");
+		$all_answers = sizeof($result);
+		$correct_answers = 0;
+		foreach ($answers as $answer) 
+			if (($answer["player_1"] == $username && $answer["answer_player_1"] == 0) || ($answer["player_2"] == $username && $answer["answer_player_2"] == 0))
+				$correct_answers++;
+		$percentages[$i]["category"] = $category;
+		$percentages[$i]["percentage"] = $all_answers = 0 ? 1 : $correct_answers / $all_answers;
+	}
 	// TODO: category percentages
 	
-	$result = ["result" => "ok", "question" => $question];
+	$result = ["result" => "ok", "elo" => $elo, "perfectGames" => $perfect_games, "wins" => $wins, "draws" => $draws, "losses" => $losses, "categoryPercentages" => $percentages];
     return $result;
 }
 
