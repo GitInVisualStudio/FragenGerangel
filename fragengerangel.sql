@@ -28,6 +28,8 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `game`
 --
 
+USE ni418681_1sql1;
+
 CREATE TABLE `game` (
   `id` bigint(20) NOT NULL,
   `player_1` varchar(32) DEFAULT NULL,

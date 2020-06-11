@@ -16,7 +16,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
     throw new Exception($errstr, $errno);
 });
 
-function main(array $post) : array {
+function start(array $post) : array {
     $connection = Globals::getDBConnection();
     
     if (!(array_key_exists("auth", $post) && array_key_exists("questionID", $post)))
@@ -41,7 +41,7 @@ function main(array $post) : array {
 
 try {
     $post = Globals::parseJson(utf8_encode(file_get_contents('php://input')));
-    $array = main($post);
+    $array = start($post);
 } catch (Exception $e) {
     $array = ["result" => "error", "error_message" => $e->getMessage(), "error_code" => $e->getCode()];
 }

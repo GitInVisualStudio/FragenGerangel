@@ -20,7 +20,7 @@ namespace FragenGerangel.Utils.API
     {
         private static readonly HttpClient client = new HttpClient()
         {
-            BaseAddress = new Uri("http://127.0.0.1:80/PHPAPI/")
+            BaseAddress = new Uri("http://ni418681-1.web06.nitrado.hosting/PHPAPI/")
         };
 
         private string username;
