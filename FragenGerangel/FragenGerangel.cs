@@ -47,17 +47,6 @@ namespace FragenGerangel
             };
 
             StateManager.Push();
-
-            //currentScreen.Init();
-            APIManager k = new APIManager("kaminund", "12345");
-            APIManager y = new APIManager("yamimiriam", "12345");
-            y.StartDuel(new Player("kaminund")).Wait();
-            k.StartDuel(new Player("yamimiriam")).Wait();
-            while (true)
-            {
-                k.Test().Wait();
-                y.Test().Wait();
-            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)

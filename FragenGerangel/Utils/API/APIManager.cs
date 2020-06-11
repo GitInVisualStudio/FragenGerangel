@@ -283,7 +283,11 @@ namespace FragenGerangel.Utils.API
         }
 
 
-        Game[] games;
+        Game[] games; // DEBUG
+        /// <summary>
+        /// Debug function, plays game with highest ID automatically for one round
+        /// </summary>
+        /// <returns></returns>
         public async Task Test()
         {
             //Statistic s = await GetStatistics().ConfigureAwait(false);
