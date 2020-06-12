@@ -15,6 +15,9 @@ namespace FragenGerangel.GameBase
         private int onlineID;
         private float? eloChange;
 
+        /// <summary>
+        /// Der Gegenspieler
+        /// </summary>
         public Player RemotePlayer
         {
             get
@@ -28,6 +31,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Runden des Spiels. Die Länge ist immer 6, falls die Runde noch nicht initialisiert wurde ist sie hier null.
+        /// </summary>
         public Round[] Rounds
         {
             get
@@ -41,6 +47,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Die letzte initialisierte Runde. Falls das Spiel noch nicht initialisiert wurde = null
+        /// </summary>
         public int LastRound
         {
             get
@@ -54,6 +63,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Der Punktestand des Spielers
+        /// </summary>
         public int ScorePlayer
         {
             get
@@ -68,6 +80,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Punktestand des Gegenspielers
+        /// </summary>
         public int ScoreRemotePlayer
         {
             get
@@ -82,10 +97,13 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// ID des Spiels
+        /// </summary>
         public int OnlineID { get => onlineID; set => onlineID = value; }
 
         /// <summary>
-        /// How this game influenced the player's elo
+        /// Wie das Spiel die ELO des Spielers beeinflusst hat. Nur gesetzt, wenn das Spiel vom Spieler beendet wurde
         /// </summary>
         public float? EloChange { get => eloChange; set => eloChange = value; } 
 

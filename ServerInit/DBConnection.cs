@@ -18,6 +18,10 @@ namespace ServerInit
         {
             get { return connection; }
         }
+
+        /// <summary>
+        /// Die verwendete Datenbank
+        /// </summary>
         public string Database
         {
             get { return database; }
@@ -35,6 +39,9 @@ namespace ServerInit
             }
         }
 
+        /// <summary>
+        /// Ein MySql Datenbankverbindungshelper
+        /// </summary>
         public DBConnection(string host, string user, string password, string database="")
         {
             InitConnection(host, user, password, database);
@@ -43,6 +50,9 @@ namespace ServerInit
             this.password = password;
         }
 
+        /// <summary>
+        /// Initialisiert eine Verbindung mit den gegebenen Daten
+        /// </summary>
         private void InitConnection(string host, string user, string password, string database)
         {
             if (connection != null)
@@ -54,32 +64,9 @@ namespace ServerInit
             connection.Open();
         }
 
-        private bool OpenConnection()
-        {
-            try
-            {
-                connection.Open();
-                return true;
-            }
-            catch (MySqlException e)
-            {
-                return false;
-            }
-        }
-
-        private bool CloseConnection()
-        {
-            try
-            {
-                connection.Close();
-                return true;
-            }
-            catch (MySqlException e)
-            {
-                return false;
-            }
-        }
-
+        /// <summary>
+        /// Sendet eine SQL-Anfrage
+        /// </summary>
         public MySqlDataReader Query(string query)
         {
             try
@@ -106,6 +93,9 @@ namespace ServerInit
             }
         }
 
+        /// <summary>
+        /// Escaped einen string, damit spezielle Charaktere ermöglicht werden. Von Stackoverflow übernommen
+        /// </summary>
         public static string MySQLEscape(string str)
         {
             return Regex.Replace(str, @"[\x00'""\b\n\r\t\cZ\\%_]",
@@ -133,7 +123,7 @@ namespace ServerInit
         }
 
         /// <summary>
-        /// Deconstructor that closes the open connection
+        /// Dekonstruktor der die offene Verbindung schließt
         /// </summary>
         ~DBConnection()
         {

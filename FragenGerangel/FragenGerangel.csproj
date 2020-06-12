@@ -102,7 +102,6 @@
     <Compile Include="Utils\Render\RenderUtils.cs" />
     <Compile Include="Utils\Render\State.cs" />
     <Compile Include="Utils\Render\StateManager.cs" />
-    <Compile Include="Utils\ResourceManager.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

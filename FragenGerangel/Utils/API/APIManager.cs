@@ -26,7 +26,7 @@ namespace FragenGerangel.Utils.API
         private string username;
         private string password;
         private string auth;
-        private DateTime authSince;
+        private DateTime authSince; // Zeitpunkt, zu dem das Token erhalten wurde
 
         public APIManager(string username, string password)
         {
@@ -51,6 +51,9 @@ namespace FragenGerangel.Utils.API
             authSince = DateTime.Now;
         }
 
+        /// <summary>
+        /// Sendet eine POST-Anfrage mit Parametern im Body
+        /// </summary>
         private async Task<string> Post(string uri, JObject json)
         {
             StringContent content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
@@ -72,14 +75,20 @@ namespace FragenGerangel.Utils.API
             return resultJson;
         }
 
+        /// <summary>
+        /// Erstellt einen neuen Benutzer mit den gespeicherten Daten. Wirft IllegalOperationException, wenn der Benutzer schon existiert
+        /// </summary>
         private async Task CreateUser()
         {
             JObject json = new JObject();
             json["username"] = username;
             json["password"] = password;
-            JObject resultJson = await PostReturnJson("createUser.php", json).ConfigureAwait(false);
+            await PostReturnJson("createUser.php", json).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Erhält ein Authentifizierungstoken. Wift WrongCredentialsException wenn falsche Anmeldedaten gegeben wurden
+        /// </summary>
         private async Task<string> GetAuthToken()
         {
             JObject json = new JObject();
@@ -89,14 +98,20 @@ namespace FragenGerangel.Utils.API
             return resultJson["token"].ToString();
         }
 
+        /// <summary>
+        /// Schickt eine Freundesanfrage an einen Benutzer mit dem gegebenen Benutzernamen oder nimmt eine Anfrage von ihm an, wenn sie existiert.
+        /// </summary>
         public async Task BefriendUser(string username)
         {
             JObject json = new JObject();
             json["auth"] = auth;
             json["username"] = username;
-            JObject resultJson = await PostReturnJson("befriendUser.php", json).ConfigureAwait(false);
+            await PostReturnJson("befriendUser.php", json).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Gibt alle Spieler zurück, die eine Freundesanfrage geschickt haben. Um diese anzunehmen muss eine Anfrage zurückgeschickt werden (siehe BefriendUser())
+        /// </summary>
         public async Task<Player[]> GetFriendRequests()
         {
             JObject json = new JObject();
@@ -108,6 +123,9 @@ namespace FragenGerangel.Utils.API
             return res;
         }
 
+        /// <summary>
+        /// Gibt alle Benutzernamen zurück, mit denen der Benutzer befreundet ist
+        /// </summary>
         public async Task<Player[]> GetFriends()
         {
             JObject json = new JObject();
@@ -119,6 +137,9 @@ namespace FragenGerangel.Utils.API
             return res;
         }
 
+        /// <summary>
+        /// Sendet eine Duellanfrage an einen bestimmten Spieler oder beantwortet sie, falls er bereits eine Anfrage gesendet hat
+        /// </summary>
         public async Task StartDuel(Player p)
         {
             JObject json = new JObject();
@@ -127,6 +148,9 @@ namespace FragenGerangel.Utils.API
             await PostReturnJson("startDuel.php", json).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Gibt alle Benutzernamen zurück, die dem Benutzer eine Duell-Anfrage geschickt haben. Um diese anzunehmen muss eine Anfrage zurückgeschickt werden (siehe StartDuel())
+        /// </summary>
         public async Task<Player[]> GetDuelRequests()
         {
             JObject json = new JObject();
@@ -138,6 +162,9 @@ namespace FragenGerangel.Utils.API
             return res;
         }
 
+        /// <summary>
+        /// Gibt alle Spiele (ohne initialisierte Runden) zurück.
+        /// </summary>
         private async Task<Game[]> GetDuelIDs()
         {
             JObject json = new JObject();
@@ -153,6 +180,9 @@ namespace FragenGerangel.Utils.API
             return res;
         }
 
+        /// <summary>
+        /// Gibt alle Runden eines Spiels zurück, mit initialisierten Runden (außer sie wurden noch nicht initialisiert, in dem Fall sind sie null)
+        /// </summary>
         private async Task<Round[]> GetRounds(int gameID) 
         {
             JObject json = new JObject();
@@ -171,6 +201,10 @@ namespace FragenGerangel.Utils.API
             return rounds;
         }
 
+        /// <summary>
+        /// Wählt eine Kategorie in einem Spiel. Wirft InsufficientPermissionsException, wenn der Spieler nicht an der Reihe war, eine Kategorie auszuwählen
+        /// </summary>
+        /// <param name="category">1, 2 oder 3 (1-basierter Index der Kategorie)</param>
         public async Task ChooseCategory(Game g, int category)
         {
             JObject json = new JObject();
@@ -180,6 +214,9 @@ namespace FragenGerangel.Utils.API
             await PostReturnJson("chooseCategory.php", json).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Gibt QuestionAnswer Paare einer gegebenen Runde zurück und weist sie nicht zu
+        /// </summary>
         private async Task<QuestionAnswer[]> GetQuestionAnswers(Round r)
         {
             JObject json = new JObject();
@@ -211,6 +248,9 @@ namespace FragenGerangel.Utils.API
             return qas;
         }
 
+        /// <summary>
+        /// Gibt eine Frage mit der gegebenen ID zurück.
+        /// </summary>
         private async Task<Question> GetQuestion(int questionID)
         {
             JObject json = new JObject();
@@ -226,6 +266,11 @@ namespace FragenGerangel.Utils.API
             return new Question(question, category, correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3);
         }
 
+        /// <summary>
+        /// Lädt die Antwort zu einer Frage hoch. Wirft keine Exception, wenn die Frage bereits beantwortet wurde.
+        /// </summary>
+        /// <param name="qa"></param>
+        /// <returns>Falls dies die letzte zu beantwortende Frage war wird die Veränderung, die das Spiel auf die ELO des Spielers hatte, zurückgegeben</returns>
         public async Task<float?> UploadQuestionAnswer(QuestionAnswer qa)
         {
             JObject json = new JObject();
@@ -236,6 +281,9 @@ namespace FragenGerangel.Utils.API
             return resultJson["deltaElo"]?.ToObject<float?>();
         } 
 
+        /// <summary>
+        /// Befüllt ein Spiel mit initialisierten Runden
+        /// </summary>
         private async Task GetGame(Game g)
         {
             g.Rounds = await GetRounds(g.OnlineID).ConfigureAwait(false);
@@ -244,6 +292,9 @@ namespace FragenGerangel.Utils.API
                     r.Questions = await GetQuestionAnswers(r).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Gibt alle aktiven (noch nicht beendeten) initialisierten Spiele zurück
+        /// </summary>
         public async Task<Game[]> GetGames()
         {
             Game[] games = await GetDuelIDs().ConfigureAwait(false);
@@ -252,6 +303,10 @@ namespace FragenGerangel.Utils.API
             return games;
         }
 
+        /// <summary>
+        /// Gibt die Statistik eines bestimmten Benutzers zurück
+        /// </summary>
+        /// <param name="p">Default = null, in dem Fall wird der eingeloggte Spieler verwendet</param>
         public async Task<Statistic> GetStatistics(Player p = null)
         {
             JObject json = new JObject();

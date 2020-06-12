@@ -12,7 +12,7 @@ namespace FragenGerangel.GameBase
     {
         private string category;
         private string question;
-        private string[] answers; // first answer is always correct one
+        private string[] answers; // Die erste Antwort ist immer die richtige
 
         private string Correct
         {
@@ -35,6 +35,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Die Fragestellung
+        /// </summary>
         public string Q
         {
             get

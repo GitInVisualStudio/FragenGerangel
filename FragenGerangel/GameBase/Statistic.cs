@@ -18,6 +18,9 @@ namespace FragenGerangel.GameBase
         private int draws;
         private int perfectGames;
 
+        /// <summary>
+        /// Der Spieler, auf den die Statistik sich bezieht
+        /// </summary>
         public Player Player
         {
             get
@@ -44,6 +47,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Prozentzahl der richtig beantworteten Fragen pro Kategorie
+        /// </summary>
         public Dictionary<string, float> CategoryPercentages
         {
             get
@@ -57,6 +63,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Anzahl gewonnener Spiele
+        /// </summary>
         public int Wins
         {
             get
@@ -70,6 +79,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Anzahl verlorener Spiele
+        /// </summary>
         public int Losses
         {
             get
@@ -83,6 +95,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Anzahl unentschiedener Spiele
+        /// </summary>
         public int Draws
         {
             get
@@ -96,6 +111,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Anzahl Spiele, bei denen jede Frage richtig beantwortet wurde
+        /// </summary>
         public int PerfectGames
         {
             get
