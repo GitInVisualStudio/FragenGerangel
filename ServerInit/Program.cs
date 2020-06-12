@@ -23,7 +23,7 @@ namespace ServerInit
                     continue;
                 query += "(";
                 foreach (string part in questions[i])
-                    query += '"' + Regex.Replace(DBConnection.MySQLEscape(part), "'", "''") + '"' + ',';
+                    query += '"' + Regex.Replace(DBConnection.MySQLEscape(part), "'", "''") + '"' + ','; // escaped die Frage (damit "and" etc möglich ist) und ersetzt einfache Anführungszeichen mit ''
                 query = query.Remove(query.Length - 1);
                 query += "),";
             }

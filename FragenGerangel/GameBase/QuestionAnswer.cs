@@ -17,12 +17,12 @@ namespace FragenGerangel.GameBase
         public Question Question { get => question; set => question = value; }
 
         /// <summary>
-        /// Index of logged-in player's answer, -1 if not answered yet
+        /// Index der Spielerantwort. Gleich -1 wenn noch unbeantwortet
         /// </summary>
         public int AnswerPlayer { get => answerPlayer; set => answerPlayer = value; }
 
         /// <summary>
-        /// Index of opponent's answer, -1 if not answered yet
+        /// Index der Antwort des Gegenspielers. Gleich -1 wenn noch unbeantwortet
         /// </summary>
         public int AnswerRemotePlayer { get => answerRemotePlayer; set => answerRemotePlayer = value; }
 

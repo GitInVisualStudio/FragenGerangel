@@ -14,6 +14,9 @@ namespace FragenGerangel.GameBase
         private QuestionAnswer[] questions;
         private string[] possibleCategories;
 
+        /// <summary>
+        /// Die Kategorie der Runde. Gleich null wenn noch nicht ausgewählt wurde
+        /// </summary>
         public string Category
         {
             get
@@ -37,6 +40,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Alle möglichen Kategorien. Nur relevant, wenn noch keine Kategorie ausgewählt wurde
+        /// </summary>
         public string[] PossibleCategories { get => possibleCategories; set => possibleCategories = value; }
         public int OnlineID { get => onlineID; set => onlineID = value; }
 

@@ -22,6 +22,9 @@ namespace FragenGerangel.Utils.API
             typeof(IllegalOperationException)
         };
 
+        /// <summary>
+        /// Gibt von einem Error-Code eine Exception zurück.
+        /// </summary>
         public static APIException FromID(int id)
         {
             foreach (Type t in ExceptionTypes)
