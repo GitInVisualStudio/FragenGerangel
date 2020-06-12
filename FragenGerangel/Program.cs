@@ -1,4 +1,6 @@
-﻿using FragenGerangel.Utils.Render;
+﻿using FragenGerangel.GameBase;
+using FragenGerangel.Utils.API;
+using FragenGerangel.Utils.Render;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,13 +16,19 @@ namespace FragenGerangel
     {
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
-        /// </summary>
+        /// </summary>^^
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FragenGerangel());
+            //APIManager manager = new APIManager("kaminund", "12345");
+            //manager.StartDuel(new Player("yamimiriam")).Wait();
+            //Task<Game[]> games = manager.GetGames();
+            //games.Wait();
+            //foreach (Game g in games.Result)
+            //    Console.WriteLine(g.OnlineID);
         }
     }
 }

@@ -87,7 +87,10 @@ namespace FragenGerangel.Utils
         private void _OnFinish()
         {
             OnFinish?.Invoke(this, reverse);
-            Delta = 1;
+            if(Incremental)
+                Delta = 1;
+            else
+                Delta = 0;
             Finished = true;
         }
 

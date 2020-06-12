@@ -63,7 +63,14 @@ namespace FragenGerangel.Gui
             {
                 GuiComponent x = components[i];
                 if (x.OnHover(e))
+                {
                     x.Component_OnClick(e);
+                    x.Selected = true;
+                }
+                else
+                {
+                    x.Selected = false;
+                }
             };
         }
 

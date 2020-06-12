@@ -1,4 +1,5 @@
 ﻿using FragenGerangel.GameBase;
+using FragenGerangel.Utils.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,14 @@ namespace FragenGerangel.Utils
             {
                 return player;
             }
-
             set
             {
                 player = value;
             }
         }
+
+        private static APIManager aPIManager;
+        public static APIManager APIManager { get => aPIManager; set => aPIManager = value; }
+
     }
 }

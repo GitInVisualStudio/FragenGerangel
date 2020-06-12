@@ -50,16 +50,16 @@ namespace FragenGerangel.GameBase
         /// <summary>
         /// Die letzte initialisierte Runde. Falls das Spiel noch nicht initialisiert wurde = null
         /// </summary>
-        public Round LastRound
+        public int LastRound
         {
             get
             {
                 if (rounds[0] == null)
-                    return null;
+                    return 0;
                 for (int i = 0; i < rounds.Length; i++)
                     if (rounds[i] == null)
-                        return rounds[i - 1];
-                return rounds.Last();
+                        return i - 1;
+                return rounds.Length;
             }
         }
 
