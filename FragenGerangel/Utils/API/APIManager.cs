@@ -295,15 +295,15 @@ namespace FragenGerangel.Utils.API
                 games = await GetGames().ConfigureAwait(false);
             await GetGame(games.Last()).ConfigureAwait(false);
             Game g = games.Last();
-            if (g.LastRound.Questions != null)
-                foreach (QuestionAnswer q in g.LastRound.Questions)
-                {
-                    q.AnswerPlayer = new Random().Next(4);
-                    float? eloChange = await UploadQuestionAnswer(q).ConfigureAwait(false);
-                    if (eloChange != null)
-                        Console.WriteLine("Elo-Change for this game for " + username + ": " + eloChange);
-                    g.EloChange = eloChange;
-                }
+            //if (g.LastRound.Questions != null)
+            //    foreach (QuestionAnswer q in g.LastRound.Questions)
+            //    {
+            //        q.AnswerPlayer = new Random().Next(4);
+            //        float? eloChange = await UploadQuestionAnswer(q).ConfigureAwait(false);
+            //        if (eloChange != null)
+            //            Console.WriteLine("Elo-Change for this game for " + username + ": " + eloChange);
+            //        g.EloChange = eloChange;
+            //    }
 
             try
             {

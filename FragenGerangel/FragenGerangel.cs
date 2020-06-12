@@ -1,3 +1,4 @@
+using FragenGerangel.GameBase;
 using FragenGerangel.Gui;
 using FragenGerangel.Gui.Screens;
 using FragenGerangel.Utils;
@@ -41,15 +42,18 @@ namespace FragenGerangel
 
             timer = new System.Windows.Forms.Timer()
             {
-                Interval = (int)(1000.0f / 60.0f)
+                Interval = (int)(1000.0f / 120.0f)
             };
             timer.Tick += Timer_Tick;
             timer.Start();
 
             FontUtils.Init(this);
-            OpenScreen(new GuiGameOverview(null));
+            //OpenScreen(new GuiCategory(null));
+            Game test = new Game(new Player("miriam"), -1);
+            Round runde = test.Rounds[0] = new Round(-1, "Mathe", "Sprachen", "IT");
+            
+            OpenScreen(new GuiGameOverview(test));
             //OpenScreen(new GuiRound("noname", "nutte", new string[] { "Killer", "baba", "antwort", "ja" }, new bool[3], 0, 1));
-
             StateManager.Push();
         }
 

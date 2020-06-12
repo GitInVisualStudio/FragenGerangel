@@ -69,6 +69,7 @@
     <Compile Include="Gui\GuiPanel.cs" />
     <Compile Include="Gui\GuiQuestionBox.cs" />
     <Compile Include="Gui\GuiScreen.cs" />
+    <Compile Include="Gui\Screens\GuiCategory.cs" />
     <Compile Include="Gui\Screens\GuiGameOverview.cs" />
     <Compile Include="Gui\Screens\GuiLoadingScreen.cs" />
     <Compile Include="Gui\Screens\GuiRound.cs" />
