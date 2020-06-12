@@ -109,12 +109,10 @@ namespace FragenGerangel.Gui
             //TODO: Render the shit
             if (CustomRender == null)
             {
-
-                
-
-                StateManager.SetColor(CurrentColor);
-                Color c2 = Color.FromArgb(120, 190, 60);
-                StateManager.FillGradientRoundRect(Location, Size, Color.LawnGreen, c2, 90, 10);
+                int r = CurrentColor.R - (int)(CurrentColor.R * 0.3f);
+                int g = CurrentColor.G - (int)(CurrentColor.G * 0.3f);
+                int b = CurrentColor.B - (int)(CurrentColor.B * 0.3f);
+                StateManager.FillGradientRoundRect(Location, Size, CurrentColor, Color.FromArgb(r,g,b), 90, 10);
                 StateManager.SetColor(FontColor);
                 StateManager.DrawCenteredString(Name, Location + Size / 2);
             }

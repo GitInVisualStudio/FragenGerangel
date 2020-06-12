@@ -21,7 +21,9 @@ namespace FragenGerangel
     {
         private System.Windows.Forms.Timer timer;
         public new Vector Size => new Vector(Width, Height);
-        private GuiScreen currentScreen, loadingScreen;
+        public GuiScreen currentScreen;
+        private GuiScreen loadingScreen;
+
 
         public FragenGerangel()
         {
@@ -45,7 +47,8 @@ namespace FragenGerangel
             timer.Start();
 
             FontUtils.Init(this);
-            OpenScreen(new GuiQuestion());
+            OpenScreen(new GuiGameOverview(null));
+            //OpenScreen(new GuiRound("noname", "nutte", new string[] { "Killer", "baba", "antwort", "ja" }, new bool[3], 0, 1));
 
             StateManager.Push();
         }
@@ -89,21 +92,11 @@ namespace FragenGerangel
 
         public void OpenScreen(GuiScreen next)
         {
-            new Thread(() =>
-            {
-                loadingScreen = new GuiLoadingScreen(next, currentScreen);
-                loadingScreen.SetLocationAndSize(this, Size);
-                loadingScreen.Init();
-                next.SetLocationAndSize(this, Size);
-                currentScreen?.Close();
-                loadingScreen.Open();
-                next.Init();
-                next.Open();
-                while (loadingScreen != null && loadingScreen.Opend)
-                    Thread.Sleep(100);
-                currentScreen = next;
-                loadingScreen = null;
-            }).Start();
+            loadingScreen = new GuiLoadingScreen(next, currentScreen, this);
+            loadingScreen.SetLocationAndSize(this, Size);
+            loadingScreen.Init();
+            currentScreen?.Close();
+            loadingScreen.Open();
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -120,7 +113,8 @@ namespace FragenGerangel
             StateManager.SetFont(FontUtils.DEFAULT_FONT);
             #region drawing
             currentScreen?.OnRender();
-            loadingScreen?.OnRender();
+            if(loadingScreen.Opend)
+                loadingScreen?.OnRender();
             #endregion stopDrawing
             AnimationManager.Update();
             StateManager.Pop();

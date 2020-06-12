@@ -41,6 +41,7 @@ namespace FragenGerangel.Gui
 
         public virtual void Open()
         {
+            animation.Reset();
             animation.Reverse();
         }
 

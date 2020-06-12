@@ -67,10 +67,11 @@
     <Compile Include="Gui\GuiCheckBox.cs" />
     <Compile Include="Gui\GuiComponent.cs" />
     <Compile Include="Gui\GuiPanel.cs" />
+    <Compile Include="Gui\GuiQuestionBox.cs" />
     <Compile Include="Gui\GuiScreen.cs" />
     <Compile Include="Gui\Screens\GuiGameOverview.cs" />
     <Compile Include="Gui\Screens\GuiLoadingScreen.cs" />
-    <Compile Include="Gui\Screens\GuiQuestion.cs" />
+    <Compile Include="Gui\Screens\GuiRound.cs" />
     <Compile Include="Gui\Screens\GuiTestScreen.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

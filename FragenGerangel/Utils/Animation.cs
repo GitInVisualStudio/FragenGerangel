@@ -88,11 +88,13 @@ namespace FragenGerangel.Utils
         {
             OnFinish?.Invoke(this, reverse);
             Delta = 1;
+            Finished = true;
         }
 
         public virtual void Reverse()
         {
             reverse = !reverse;
+            Finished = false;
             Fire();
         }
 
@@ -101,12 +103,12 @@ namespace FragenGerangel.Utils
             if (reverse)
             {
                 Delta -= Delta * StateManager.delta * Speed * 3.0f;
-                if (Delta < tolerance)
+                if (Delta <= tolerance)
                     _OnFinish();
                 return;
             }
             Delta += (1 - Delta) * StateManager.delta * Speed * 3.0f;
-            if (Delta > 1 - tolerance)
+            if (Delta >= 1 - tolerance)
                 _OnFinish();
         }
     }

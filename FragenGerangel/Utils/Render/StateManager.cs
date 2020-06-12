@@ -147,6 +147,12 @@ namespace FragenGerangel.Utils.Render
             g.FillEllipse(new SolidBrush(Color), x - r / 2, y - r / 2, r, r);
         }
 
+        public static void FillGradientCircle(float x, float y, float r, Color c1, Color c2, float angle = 90)
+        {
+            LinearGradientBrush brush = GetGradientBrush(new Vector(x - r/2f, y - r/2f), new Vector(r + 2, r + 2), c1, c2, angle);
+            g.FillEllipse(brush, x - r / 2, y - r / 2, r, r);
+        }
+
         public static void DrawCircle(Vector position, float r) => DrawCircle(position.X, position.Y, r);
         
         /// <summary>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
@@ -13,27 +14,21 @@ namespace FragenGerangel.Gui.Screens
     public class GuiLoadingScreen : GuiScreen
     {
         private GuiScreen next, current;
+        private FragenGerangel fragenGerangel;
         //private Animation animation;
         private float time;
+        private bool flag;
 
-        public GuiLoadingScreen(GuiScreen nextScreen, GuiScreen currentScreen) : base()
+        public GuiLoadingScreen(GuiScreen nextScreen, GuiScreen currentScreen, FragenGerangel fragenGerangel) : base()
         {
             current = currentScreen;
             next = nextScreen;
+            this.fragenGerangel = fragenGerangel;
             animation = new Animation();
-            animation.OnFinish += Animation_OnFinish;
+            //animation.OnFinish += Animation_OnFinish;
             animation.Speed *= 2;
+            flag = true;
             animation.Fire();
-        }
-
-        private void Animation_OnFinish(object sender, bool e)
-        {
-            if (animation.Incremental)
-                animation.Reverse();
-            else
-            {
-                Opend = false;
-            }
         }
 
         public override void Open()
@@ -54,6 +49,23 @@ namespace FragenGerangel.Gui.Screens
             //StateManager.SetColor(0, 0, 0, (int)(50 * animation.Delta));
             //StateManager.FillRect(Location, Size);
             //next.OnRender();
+            if(animation.Incremental && flag && (current != null ? !current.Opend : true) && animation.Finished && fragenGerangel.currentScreen == current)
+            {
+                flag = false;
+                new Thread(() =>
+                {
+                    next.SetLocationAndSize(this, Size);
+                    next.Init();
+                    next.Open();
+                    animation.Reverse();
+                    fragenGerangel.currentScreen = next;
+                }).Start();
+            }
+            else if(!animation.Incremental && animation.Finished)
+            {
+                Opend = false;
+                return;
+            }
             if (animation.Delta == 0)
                 return;
             Color c1 = Color.FromArgb((int)(255 * animation.Delta), 2, 175, 230);

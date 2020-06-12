@@ -87,7 +87,7 @@ namespace FragenGerangel.GameBase
         /// <summary>
         /// How this game influenced the player's elo
         /// </summary>
-        public float? EloChange { get => eloChange; set => eloChange = value; } // TODO: jamin fragen ob das serverside gespeichert werden soll
+        public float? EloChange { get => eloChange; set => eloChange = value; } 
 
         public Game(Player remote, int onlineID)
         {

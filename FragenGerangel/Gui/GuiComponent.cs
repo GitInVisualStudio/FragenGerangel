@@ -16,7 +16,7 @@ namespace FragenGerangel.Gui
         private Vector size = new Vector(0,0);
         private string name;
         private bool selected;
-        private Color backColor;
+        private Color backColor = Color.Gray;
         private Color fontColor;
         private float rX = -1, rY = -1, rWidth = -1, rHeight = -1;//Relative Location und Size
         public event EventHandler<Vector> OnResize;
@@ -233,7 +233,6 @@ namespace FragenGerangel.Gui
         public virtual void Init()
         {
             OnResize += SetLocationAndSize;
-            BackColor = Color.Gray;
         }
         
 

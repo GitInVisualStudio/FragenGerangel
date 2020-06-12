@@ -105,18 +105,23 @@ namespace FragenGerangel.Gui
             });
         }
 
+        protected T GetComponent<T>(string name) where T : GuiComponent
+        {
+            return (T)components.Find(x => x.Name == name);
+        }
+
         public override void OnRender()
         {
             if (Size.X < 1 || Size.Y < 1)
                 return;
-            buffer = new Bitmap((int)Size.X, (int)Size.Y);
-            StateManager.Push();
-            StateManager.Translate(-Location);
-            StateManager.SetGraphics(Graphics.FromImage(buffer));
+            //buffer = new Bitmap((int)Size.X, (int)Size.Y);
+            //StateManager.Push();
+            //StateManager.Translate(-Location);
+            //StateManager.SetGraphics(Graphics.FromImage(buffer));
             components.ForEach(x => x.OnRender());
-            StateManager.Pop();
-            StateManager.DrawImage(buffer, Location);
-            buffer.Dispose();
+            //StateManager.Pop();
+            //StateManager.DrawImage(buffer, Location);
+            //buffer.Dispose();
         }
     }
 }

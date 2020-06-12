@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FragenGerangel.Utils.Math;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -47,6 +48,32 @@ namespace FragenGerangel.Utils.Render
             Marshal.Copy(pixels, 0, ptrFirstPixel, pixels.Length);
             img.UnlockBits(bSrc);
             return img;
+        }
+
+        public static void DrawPlayer(string name, Vector location, float s)
+        {
+            Color c1 = Color.FromArgb(255, 30, 80, 150);
+            Color c2 = Color.FromArgb(255, 0, 0, 50);
+            StateManager.FillGradientCircle(location.X, location.Y, s, c1, c2);
+            c1 = Color.FromArgb(255, 255, 255, 255);
+            c2 = Color.FromArgb(255, 180, 180, 180);
+            float size = s / 3f;
+            StateManager.FillGradientCircle(location.X - size / 2 - size / 10, location.Y, size, c1, c2);
+            StateManager.FillGradientCircle(location.X + size / 2 + size / 10, location.Y, size, c1, c2);
+            c1 = Color.FromArgb(255, 0, 0, 0);
+            c2 = Color.FromArgb(255, 50, 50, 50);
+            StateManager.Push();
+            StateManager.Translate(location.X - size / 2 - size / 10, location.Y);
+            StateManager.FillGradientCircle(size / 6, -size / 6, size / 2, c1, c2);
+            StateManager.Pop();
+            StateManager.Push();
+            StateManager.Translate(location.X + size / 2 + size / 10, location.Y);
+            StateManager.FillGradientCircle(size / 6, -size / 6, size / 2, c1, c2);
+            StateManager.Pop();
+            StateManager.SetColor(Color.Black);
+            StateManager.SetFont(new Font("comfortaa", 15));
+            StateManager.DrawCenteredString(name, location.X, location.Y + s / 2 + 15);
+
         }
     }
 }
