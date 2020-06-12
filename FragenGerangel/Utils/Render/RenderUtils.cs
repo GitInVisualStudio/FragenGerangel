@@ -50,7 +50,7 @@ namespace FragenGerangel.Utils.Render
             return img;
         }
 
-        public static void DrawPlayer(string name, Vector location, float s)
+        public static void DrawPlayer(string name, Vector location, float s, bool renderName = true)
         {
             Color c1 = Color.FromArgb(255, 30, 80, 150);
             Color c2 = Color.FromArgb(255, 0, 0, 50);
@@ -70,6 +70,8 @@ namespace FragenGerangel.Utils.Render
             StateManager.Translate(location.X + size / 2 + size / 10, location.Y);
             StateManager.FillGradientCircle(size / 6, -size / 6, size / 2, c1, c2);
             StateManager.Pop();
+            if(!renderName)
+                return;
             StateManager.SetColor(Color.Black);
             StateManager.SetFont(new Font("comfortaa", 15));
             StateManager.DrawCenteredString(name, location.X, location.Y + s / 2 + 15);

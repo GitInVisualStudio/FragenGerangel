@@ -18,7 +18,6 @@ namespace FragenGerangel.Gui
         private Action customRender = null;
         private Color currentColor;
         private Animation animation;
-        private PointF[] points;
         private Vector point;
 
         public Action CustomRender
@@ -77,10 +76,6 @@ namespace FragenGerangel.Gui
             point = e;
             animation.Reset();
             animation.Fire();
-            for (int i = 0; i < points.Length; i++)
-            {
-                //points[i] = new PointF(point.X, point.Y);
-            }
         }
 
         public override void Init()
@@ -91,16 +86,13 @@ namespace FragenGerangel.Gui
             animation.Speed /= 2;
             animation.Stop();
             CurrentColor = BackColor;
-            points = new PointF[100];
-            //OnEnter += (object sender, Vector location) =>
-            //{
-            //    CurrentColor = HoverColor;
-            //};
+            OnKeyPress += GuiButton_OnKeyPress;
+        }
 
-            //OnLeave += (object sender, Vector location) =>
-            //{
-            //    CurrentColor = BackColor;
-            //};
+        private void GuiButton_OnKeyPress(object sender, char e)
+        {
+            if (e == 13)
+                Component_OnClick(new Vector(0, 0));
         }
 
         public override void OnRender()

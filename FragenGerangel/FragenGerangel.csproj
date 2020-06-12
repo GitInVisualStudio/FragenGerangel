@@ -69,12 +69,14 @@
     <Compile Include="Gui\GuiPanel.cs" />
     <Compile Include="Gui\GuiQuestionBox.cs" />
     <Compile Include="Gui\GuiScreen.cs" />
+    <Compile Include="Gui\GuiSearch.cs" />
     <Compile Include="Gui\GuiTextBox.cs" />
     <Compile Include="Gui\Screens\GuiCategory.cs" />
+    <Compile Include="Gui\Screens\GuiFindOpponent.cs" />
     <Compile Include="Gui\Screens\GuiGameOverview.cs" />
     <Compile Include="Gui\Screens\GuiLoadingScreen.cs" />
     <Compile Include="Gui\Screens\GuiLogin.cs" />
-    <Compile Include="Gui\Screens\GuiRegister.cs" />
+    <Compile Include="Gui\Screens\GuiMainScreen.cs" />
     <Compile Include="Gui\Screens\GuiRound.cs" />
     <Compile Include="Gui\Screens\GuiTestScreen.cs" />
     <Compile Include="Program.cs" />

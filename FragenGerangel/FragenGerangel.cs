@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -48,14 +49,24 @@ namespace FragenGerangel
             timer.Start();
 
             FontUtils.Init(this);
-            OpenScreen(new GuiLogin(this));
-            //OpenScreen(new GuiCategory(null));
-            //Game test = new Game(new Player("miriam"), -1);
-            //Round runde = test.Rounds[0] = new Round(-1, "Mathe", "Sprachen", "IT");
-            
-            //OpenScreen(new GuiGameOverview(test));
-            //OpenScreen(new GuiRound("noname", "nutte", new string[] { "Killer", "baba", "antwort", "ja" }, new bool[3], 0, 1));
+            string[] account;
+            if ((account = GetAccount()) == null)
+                OpenScreen(new GuiLogin(this));
+            else
+            {
+                Globals.APIManager = new APIManager(account[0], account[1]);
+                OpenScreen(new GuiMainScreen(this));
+            }
+            //OpenScreen(new GuiFindOpponent(this));
             StateManager.Push();
+        }
+
+        private string[] GetAccount()
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
+            if (!File.Exists(path))
+                return null;
+            return File.ReadAllLines(path);
         }
 
         private void Timer_Tick(object sender, EventArgs e)

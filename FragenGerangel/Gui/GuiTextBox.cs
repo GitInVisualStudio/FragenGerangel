@@ -12,10 +12,10 @@ namespace FragenGerangel.Gui
 {
     public class GuiTextBox : GuiComponent
     {
-        private Animation animation;
-        private float time;
-        private string text = "";
-        private string token;
+        protected Animation animation;
+        protected float time;
+        protected string text = "";
+        protected string token;
 
         public string Text { get => text; set => text = value; }
 
@@ -27,7 +27,7 @@ namespace FragenGerangel.Gui
             animation.Fire();
         }
 
-        private void GuiTextBox_OnKeyPress(object sender, char e)
+        protected virtual void GuiTextBox_OnKeyPress(object sender, char e)
         {
             if (e != 8)
             {
