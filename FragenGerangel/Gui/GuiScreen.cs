@@ -12,6 +12,7 @@ namespace FragenGerangel.Gui
     {
         private bool opend;
         protected Animation animation = new Animation();
+        private event EventHandler OnClose;
 
         public bool Opend
         {
@@ -37,6 +38,8 @@ namespace FragenGerangel.Gui
         private void Animation_OnFinish(object sender, bool e)
         {
             opend = animation.Incremental;
+            if (!opend)
+                OnClose?.Invoke(this, null);
         }
 
         public virtual void Open()

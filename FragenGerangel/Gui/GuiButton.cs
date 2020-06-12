@@ -114,6 +114,7 @@ namespace FragenGerangel.Gui
                 int b = CurrentColor.B - (int)(CurrentColor.B * 0.3f);
                 StateManager.FillGradientRoundRect(Location, Size, CurrentColor, Color.FromArgb(r,g,b), 90, 10);
                 StateManager.SetColor(FontColor);
+                StateManager.SetFont(FontUtils.DEFAULT_FONT);
                 StateManager.DrawCenteredString(Name, Location + Size / 2);
             }
             else
