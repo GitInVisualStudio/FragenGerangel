@@ -1,4 +1,5 @@
 ﻿using FragenGerangel.GameBase;
+using FragenGerangel.Utils;
 using FragenGerangel.Utils.Math;
 using FragenGerangel.Utils.Render;
 using System;
@@ -34,6 +35,10 @@ namespace FragenGerangel.Gui.Screens
         private void GuiFindOpponent_OnTextChange(object sender, string e)
         {
             //TODO: search for new Player
+            Task<Player[]> task = Globals.APIManager.Search(GetComponent<GuiSearch>("Suche").Text);
+            task.Wait();
+            Player[] p = task.Result;
+            players = p;
         }
 
         protected override void Panel_OnKeyPress(object sender, char e)

@@ -69,7 +69,7 @@ class Globals
 
     static function getDBConnection() : DBConnection {
         if (Globals::$dbConnection == null)
-            Globals::$dbConnection = new DBConnection("127.0.0.1", "root", "", "FragenGerangel");
+            Globals::$dbConnection = new DBConnection("127.0.0.1", "ni418681_1sql1", "fragengerangel", "ni418681_1sql1");
         return Globals::$dbConnection;
     }
 	

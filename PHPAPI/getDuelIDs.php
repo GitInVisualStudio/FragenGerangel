@@ -23,7 +23,7 @@ function start(array $post) : array {
     
 	$username = Globals::getUsernameFromAuth($connection, $post["auth"]);
 	
-	$result = $connection->select("game` `g", ["id", "player_1", "player_2"], "(`player_1` = '{$username}' OR `player_2` = '{$username}') AND EXISTS(SELECT * FROM round r WHERE g.id = r.game)");
+	$result = $connection->select("game` `g", ["id", "player_1", "player_2"], "(`player_1` = '{$username}' OR `player_2` = '{$username}') AND EXISTS(SELECT * FROM round r WHERE g.id = r.game) AND won_by IS NULL");
 	$games = [];
 	for ($i = 0; $i < sizeof($result); $i++) {
 		$row = $result[$i];
