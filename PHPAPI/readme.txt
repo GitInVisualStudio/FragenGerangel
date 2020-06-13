@@ -134,3 +134,9 @@ output:
 		string category
 		float percentage
 	]
+	
+searchPlayer.php
+input:
+	string query
+output
+	string[] usernames

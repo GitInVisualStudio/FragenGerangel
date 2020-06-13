@@ -86,12 +86,27 @@ namespace FragenGerangel.Gui
 
         protected virtual void Panel_OnKeyPress(object sender, char e)
         {
+            bool flag = false;
             for (int i = components.Count - 1; i >= 0; i--)
             {
                 GuiComponent x = components[i];
+                if(e == 9 && x.Selected)
+                {
+                    flag = true;
+                    x.Selected = false;
+                    if (i < components.Count - 1)
+                        components[i + 1].Selected = true;
+                    else
+                        components[0].Selected = true;
+                    return;
+                }
                 if (x.Selected)
+                {
                     x.Component_OnKeyPress(e);
+                }
             };
+            if (!flag && e == 9 && components.Count > 0)
+                components[0].Selected = true;
         }
 
         public override void Init()

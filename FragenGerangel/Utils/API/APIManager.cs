@@ -337,6 +337,18 @@ namespace FragenGerangel.Utils.API
             };
         }
 
+        public async Task<Player[]> Search(string query)
+        {
+            JObject json = new JObject();
+            json["auth"] = auth;
+            json["query"] = query;
+            JObject resultJson = await PostReturnJson("search.php", json).ConfigureAwait(false);
+            Player[] p = new Player[resultJson["usernames"].Count()];
+            for (int i = 0; i < p.Length; i++)
+                p[i] = new Player(resultJson["usernames"][i].ToObject<string>());
+            return p;
+        }
+
 
         Game[] games; // DEBUG
         /// <summary>
@@ -350,15 +362,15 @@ namespace FragenGerangel.Utils.API
                 games = await GetGames().ConfigureAwait(false);
             await GetGame(games.Last()).ConfigureAwait(false);
             Game g = games.Last();
-            //if (g.LastRound.Questions != null)
-            //    foreach (QuestionAnswer q in g.LastRound.Questions)
-            //    {
-            //        q.AnswerPlayer = new Random().Next(4);
-            //        float? eloChange = await UploadQuestionAnswer(q).ConfigureAwait(false);
-            //        if (eloChange != null)
-            //            Console.WriteLine("Elo-Change for this game for " + username + ": " + eloChange);
-            //        g.EloChange = eloChange;
-            //    }
+            if (g.Rounds[g.LastRound].Questions != null)
+                foreach (QuestionAnswer q in g.Rounds[g.LastRound].Questions)
+                {
+                    q.AnswerPlayer = new Random().Next(4);
+                    float? eloChange = await UploadQuestionAnswer(q).ConfigureAwait(false);
+                    if (eloChange != null)
+                        Console.WriteLine("Elo-Change for this game for " + username + ": " + eloChange);
+                    g.EloChange = eloChange;
+                }
 
             try
             {

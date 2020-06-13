@@ -24,9 +24,8 @@ namespace FragenGerangel.Gui.Screens
             current = currentScreen;
             next = nextScreen;
             this.fragenGerangel = fragenGerangel;
-            animation = new Animation();
+            animation = new Animation(4);
             //animation.OnFinish += Animation_OnFinish;
-            animation.Speed *= 2;
             flag = true;
             animation.Fire();
         }
@@ -46,14 +45,13 @@ namespace FragenGerangel.Gui.Screens
             base.OnRender();
             if (!Opend)
                 return;
-            //StateManager.SetColor(0, 0, 0, (int)(50 * animation.Delta));
-            //StateManager.FillRect(Location, Size);
-            //next.OnRender();
             if(animation.Incremental && flag && (current != null ? !current.Opend : true) && animation.Finished && fragenGerangel.currentScreen == current)
             {
                 flag = false;
                 new Thread(() =>
                 {
+                    while (Globals.APIManager == null && current != null)
+                        Thread.Sleep(100);
                     next.SetLocationAndSize(this, Size);
                     next.Init();
                     next.Open();

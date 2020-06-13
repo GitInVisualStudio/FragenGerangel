@@ -17,6 +17,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
 });
 
 function start(array $post) : array {
+	global $question_id;
     $connection = Globals::getDBConnection();
     
     if (!(array_key_exists("auth", $post) && array_key_exists("questionID", $post)))
@@ -28,12 +29,12 @@ function start(array $post) : array {
 	$result = $connection->select("question", [], "`id` = '{$question_id}'");
 	$question = [];
 	$row = $result[0];
-	$question["category"] = $row["category"];
-	$question["question"] = $row["question"];
-	$question["correctAnswer"] = $row["correct_answer"];
-	$question["wrongAnswer1"] = $row["wrong_answer_1"];
-	$question["wrongAnswer2"] = $row["wrong_answer_2"];
-	$question["wrongAnswer3"] = $row["wrong_answer_3"];
+	$question["category"] = utf8_encode($row["category"]);
+	$question["question"] = utf8_encode($row["question"]);
+	$question["correctAnswer"] = utf8_encode($row["correct_answer"]);
+	$question["wrongAnswer1"] = utf8_encode($row["wrong_answer_1"]);
+	$question["wrongAnswer2"] = utf8_encode($row["wrong_answer_2"]);
+	$question["wrongAnswer3"] = utf8_encode($row["wrong_answer_3"]);
 	
 	$result = ["result" => "ok", "question" => $question];
     return $result;
@@ -47,4 +48,3 @@ try {
 }
 
 echo json_encode($array);
-    
