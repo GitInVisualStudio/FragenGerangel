@@ -30,8 +30,6 @@ namespace FragenGerangel.Gui
             }
         }
 
-        //public bool Enabled { get => enabled; set => enabled = value; }
-
         public GuiCheckBox()
         {
             token = Selected ? 10004 : 10007;

@@ -82,6 +82,7 @@
     <Compile Include="Gui\Screens\GuiLogin.cs" />
     <Compile Include="Gui\Screens\GuiMainScreen.cs" />
     <Compile Include="Gui\Screens\GuiRound.cs" />
+    <Compile Include="Gui\Screens\GuiStats.cs" />
     <Compile Include="Gui\Screens\GuiTestScreen.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

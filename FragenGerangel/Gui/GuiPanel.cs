@@ -43,7 +43,7 @@ namespace FragenGerangel.Gui
                 GuiComponent x = components[i];
                 if (x.OnHover(e))
                     x.Component_OnRelease(e);
-            };
+            }
         }
 
         protected virtual void Panel_OnMove(object sender, Vector e)
@@ -53,7 +53,7 @@ namespace FragenGerangel.Gui
                 GuiComponent x = components[i];
                 if (x.OnHover(e))
                     x.Component_OnMove(e);
-            };
+            }
         }
 
         protected virtual void Panel_OnClick(object sender, Vector e)
@@ -70,7 +70,7 @@ namespace FragenGerangel.Gui
                 {
                     x.Selected = false;
                 }
-            };
+            }
         }
 
         protected virtual void Panel_OnKeyRelease(object sender, char e)
@@ -80,7 +80,7 @@ namespace FragenGerangel.Gui
                 GuiComponent x = components[i];
                 if (x.Selected)
                     x.Component_OnKeyRelease(e);
-            };
+            }
         }
 
         protected virtual void Panel_OnKeyPress(object sender, char e)
@@ -103,7 +103,7 @@ namespace FragenGerangel.Gui
                 {
                     x.Component_OnKeyPress(e);
                 }
-            };
+            }
             if (!flag && e == 9 && components.Count > 0)
                 components[0].Selected = true;
         }
@@ -117,6 +117,7 @@ namespace FragenGerangel.Gui
             OnRelease += Panel_OnRelease;
             OnKeyPress += Panel_OnKeyPress;
             OnKeyRelease += Panel_OnKeyRelease;
+            OnLeave += GuiPanel_OnLeave;
             SetLocationAndSize(this, Size);
 
             components.ForEach(x =>
@@ -124,6 +125,15 @@ namespace FragenGerangel.Gui
                 x.Init();
                 x.SetLocationAndSize(this, Size);
             });
+        }
+
+        protected virtual void GuiPanel_OnLeave(object sender, Vector e)
+        {
+            for (int i = components.Count - 1; i >= 0; i--)
+            {
+                GuiComponent x = components[i];
+                x.Component_OnLeave(e);
+            }
         }
 
         protected T GetComponent<T>(string name) where T : GuiComponent

@@ -35,7 +35,8 @@ namespace FragenGerangel.Gui.Screens
 
         private void Round_OnClose(object sender, int e)
         {
-            game.LastRound.Questions[index].AnswerPlayer = e;
+            if(index < 3)
+                game.LastRound.Questions[index].AnswerPlayer = e;
             index++;
             if (index < 3)
             {
@@ -69,6 +70,10 @@ namespace FragenGerangel.Gui.Screens
                 });
                 animation.Speed = 0.6f;
                 base.Init();
+                GetComponent<GuiButton>("Zurück").OnClick += (object sender, Vector e) =>
+                {
+                    fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                };
                 return;
             }
             Components.Add(new GuiButton(IsRemoteTurn() ? "Zurück" : "SPIELEN")
@@ -89,12 +94,16 @@ namespace FragenGerangel.Gui.Screens
                 if (game.LastRound.Category == null)
                 {
                     GuiCategory category = new GuiCategory(game);
+                    bool flag = true;
                     category.OnClose += (object s, EventArgs args) =>
                     {
                         new Thread(() =>
                         {
-                            if (game.LastRound.Category != null)
+                            if (!flag)
                                 return;
+                            flag = false;
+                            category.animation.Finished = true;
+                            category.animation.Incremental = true;
                             Globals.APIManager.ChooseCategory(game, category.Category + 1).Wait();
                             Task task = Globals.APIManager.GetGame(game);
                             task.Wait();
@@ -196,9 +205,9 @@ namespace FragenGerangel.Gui.Screens
                     var1 = RenderRound(game.Rounds[i]);
                 StateManager.Pop();
 
-                Vector size = StateManager.GetStringSize(i.ToString());
+                Vector size = StateManager.GetStringSize((i + 1).ToString());
                 StateManager.SetColor(Color.White);
-                StateManager.DrawString(i.ToString(), Size.X / 2 - size.X / 2 + 1, offset - size.Y / 2 + 1);
+                StateManager.DrawString((i + 1).ToString(), Size.X / 2 - size.X / 2 + 1, offset - size.Y / 2 + 1);
                 if (flag)
                 {
                     StateManager.SetColor(Color.Black);

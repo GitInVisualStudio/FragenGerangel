@@ -68,7 +68,7 @@ namespace FragenGerangel.Utils.API
             if (uri != "getAuthToken.php" && uri != "createUser.php" && DateTime.Now - authSince >= new TimeSpan(24, 0, 0))
                 Init().Wait();
             string resultStr = await Post(uri, json).ConfigureAwait(false);
-            Console.WriteLine(resultStr);
+            //Console.WriteLine(resultStr);
             JObject resultJson = JObject.Parse(resultStr);
             if (resultJson["result"].ToString() != "ok")
                 throw APIExceptionManager.FromID(resultJson["error_code"].ToObject<int>());

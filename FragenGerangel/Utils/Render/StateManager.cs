@@ -154,7 +154,20 @@ namespace FragenGerangel.Utils.Render
         }
 
         public static void DrawCircle(Vector position, float r) => DrawCircle(position.X, position.Y, r);
-        
+
+        public static void FillCircle(float x, float y, float r, float angle)
+        {
+            PointF[] points = new PointF[(int)angle + 1];
+            if(angle < 360)
+                points[0] = new PointF(x, y);
+
+            for (int i = angle < 360 ? 1 : 0; i < angle; i++)
+            {
+                points[i] = new PointF(x + MathUtils.Sin(i) * r/2, y + MathUtils.Cos(i) * r / 2 );
+            }
+            g.FillPolygon(new SolidBrush(Color), points);
+        }
+
         /// <summary>
         /// Zeichnet eine Linie
         /// </summary>

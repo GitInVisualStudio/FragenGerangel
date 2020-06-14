@@ -15,7 +15,17 @@ namespace FragenGerangel.Utils
         private bool finished;
         private bool reverse;
         public event EventHandler<bool> OnFinish;
-        public bool Incremental => !reverse;
+        public bool Incremental
+        {
+            get
+            {
+                return !reverse;
+            }
+            set
+            {
+                reverse = !value;
+            }
+        }
 
         public bool Finished
         {
@@ -84,7 +94,7 @@ namespace FragenGerangel.Utils
             Delta = 1;
         }
 
-        private void _OnFinish()
+        public void _OnFinish()
         {
             OnFinish?.Invoke(this, reverse);
             if(Incremental)

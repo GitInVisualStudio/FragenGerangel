@@ -55,6 +55,8 @@ namespace FragenGerangel
             else
             {
                 Globals.APIManager = new APIManager(account[0], account[1]);
+                while (Globals.APIManager == null)
+                    Thread.Sleep(100);
                 OpenScreen(new GuiMainScreen(this));
             }
             //OpenScreen(new GuiFindOpponent(this));
@@ -122,14 +124,17 @@ namespace FragenGerangel
             loadingScreen = new GuiLoadingScreen(next, currentScreen, this);
             loadingScreen.SetLocationAndSize(this, Size);
             loadingScreen.Init();
-            currentScreen?.Close();
+            if(currentScreen != null)
+                if(currentScreen.Opend)
+                    currentScreen.Close();
             loadingScreen.Open();
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             base.OnFormClosed(e);
-            currentScreen.Opend = false;
+            if(currentScreen != null)
+                currentScreen.Opend = false;
             loadingScreen = null;
         }
 

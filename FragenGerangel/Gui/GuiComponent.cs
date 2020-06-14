@@ -178,7 +178,7 @@ namespace FragenGerangel.Gui
 
         public virtual bool OnHover(Vector location)
         {
-            if(location.X > this.location.X && location.X < this.location.X + size.X && location.Y > this.location.Y && location.Y < this.location.Y + size.Y)
+            if(location.X > this.location.X && location.X < this.location.X + size.X && this.location.Y < location.Y && this.location.Y + size.Y > location.Y)
             {
                 if (hovering == false)
                     OnEnter?.Invoke(this, location);

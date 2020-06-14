@@ -19,6 +19,7 @@ namespace FragenGerangel.Gui
         private Color currentColor;
         private Animation animation;
         private Vector point;
+        protected float var1 = 0, var2 = 0;
 
         public Action CustomRender
         {
@@ -87,6 +88,18 @@ namespace FragenGerangel.Gui
             animation.Stop();
             CurrentColor = BackColor;
             OnKeyPress += GuiButton_OnKeyPress;
+            OnEnter += GuiButton_OnEnter;
+            OnLeave += GuiButton_OnLeave;
+        }
+
+        private void GuiButton_OnLeave(object sender, Vector e)
+        {
+            var2 = 0;
+        }
+
+        private void GuiButton_OnEnter(object sender, Vector e)
+        {
+            var2 = 0.2f;
         }
 
         private void GuiButton_OnKeyPress(object sender, char e)
@@ -101,9 +114,13 @@ namespace FragenGerangel.Gui
             //TODO: Render the shit
             if (CustomRender == null)
             {
-                int r = CurrentColor.R - (int)(CurrentColor.R * 0.3f);
-                int g = CurrentColor.G - (int)(CurrentColor.G * 0.3f);
-                int b = CurrentColor.B - (int)(CurrentColor.B * 0.3f);
+                var1 += (var2 - var1) * StateManager.delta * 10;
+                int r = CurrentColor.R - (int)(CurrentColor.R * (0.3f + var1));
+                int g = CurrentColor.G - (int)(CurrentColor.G * (0.3f + var1));
+                int b = CurrentColor.B - (int)(CurrentColor.B * (0.3f + var1));
+                r = Math.Abs(r % 255);
+                g = Math.Abs(g % 255);
+                b = Math.Abs(b % 255);
                 StateManager.FillGradientRoundRect(Location, Size, CurrentColor, Color.FromArgb(r,g,b), 90, 10);
                 StateManager.SetColor(FontColor);
                 StateManager.SetFont(FontUtils.DEFAULT_FONT);

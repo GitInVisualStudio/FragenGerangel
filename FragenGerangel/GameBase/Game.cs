@@ -61,13 +61,15 @@ namespace FragenGerangel.GameBase
             {
                 if (rounds[0] == null)
                     return active;
-                if (LastRound == null || LastRound.Questions == null || LastRound.Questions.ToList().Find(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) == null)
+                if (rounds.ToList().FindIndex(x => x == null) != -1)
                     return true;
+                foreach (Round r in rounds)
+                    if (r == null || r.Questions == null || r.Questions.ToList().FindIndex(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) != -1)
+                        return true;
                 return false;
             }
             set => active = value;
         }
-
         public int ScorePlayer
         {
             get

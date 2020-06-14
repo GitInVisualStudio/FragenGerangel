@@ -128,6 +128,7 @@ namespace FragenGerangel.Gui
             OnRelease += Panel_OnRelease;
             OnKeyPress += Panel_OnKeyPress;
             OnKeyRelease += Panel_OnKeyRelease;
+            OnLeave += GuiList_OnLeave;
             SetLocationAndSize(this, Size);
 
             components.ForEach(x =>
@@ -135,6 +136,15 @@ namespace FragenGerangel.Gui
                 x.Init();
                 x.SetLocationAndSize(this, Size);
             });
+        }
+
+        private void GuiList_OnLeave(object sender, Vector e)
+        {
+            for (int i = components.Count - 1; i >= 0; i--)
+            {
+                GuiComponent x = components[i];
+                x.Component_OnLeave(e);
+            }
         }
 
         protected T GetComponent(string name)
@@ -149,7 +159,14 @@ namespace FragenGerangel.Gui
             StateManager.SetColor(Color.Black);
             StateManager.FillRect(Location.X - 5 + 20, Location.Y, 2, height);
             StateManager.DrawString(Name, Location.X  + 20, Location.Y);
-            components.ForEach(x => x.OnRender());
+            int offset = 0;
+            for(int i = 0; i < components.Count; i++)
+            {
+                T t = components[i];
+                t.Location = new Vector(Location.X, Location.Y + offset + 30);
+                t.OnRender();
+                offset += (int)t.Size.Y + 10;
+            }
         }
     }
 }

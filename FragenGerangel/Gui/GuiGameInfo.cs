@@ -43,6 +43,10 @@ namespace FragenGerangel.Gui
 
         public override void OnRender()
         {
+            //var1 += (var2 - var1) * StateManager.delta * 10;
+            //int r = CurrentColor.R - (int)(CurrentColor.R * (var1));
+            //int g = CurrentColor.G - (int)(CurrentColor.G * (var1));
+            //int b = CurrentColor.B - (int)(CurrentColor.B * (var1));
             StateManager.SetFont(new Font("Arial", 12, FontStyle.Bold));
             StateManager.SetColor(CurrentColor);
             StateManager.FillRoundRect(Location, Size, 15);
@@ -54,8 +58,10 @@ namespace FragenGerangel.Gui
             StateManager.DrawString(game.RemotePlayer.Name, Location.X + 90, Location.Y + Size.Y / 2 - height / 2);
             StateManager.DrawString(game.RemotePlayer.Name + " " + game.ScoreRemotePlayer + ":" + game.ScorePlayer + " " + Globals.Player.Name, Location.X + 90, Location.Y + Size.Y / 2 + height / 2);
             StateManager.FillRect(Location.X - 10 + 90, Location.Y + Size.Y / 2 - height / 2, 2, height * 2);
-            string text = Remote ? "Warte auf " + game.RemotePlayer.Name : "Du bist dran";
-            StateManager.DrawCenteredString(text + "!", Location + Size / 2);
+            string text = (Remote ? "Warte auf " + game.RemotePlayer.Name : "Du bist dran") + "!";
+            if (!game.Active)
+                text = game.ScoreRemotePlayer > game.ScorePlayer ? "Du hast verloren! :(" : game.ScorePlayer == game.ScoreRemotePlayer ? "Unentschieden!" : "Du hast gewonnen! :)";
+            StateManager.DrawCenteredString(text, Location + Size / 2);
         }
     }
 }
