@@ -21,11 +21,11 @@ function start(array $post) : array {
         throw new MissingParameterException();
     
 	$username = Globals::getUsernameFromAuth($connection, $post["auth"]);
-    
-	$result = $connection->select("user_is_friends", ["sender"], "`reciever` = '{$username}' AND `accepted` = 1");
+	
+	$result = $connection->query("SELECT * FROM user_is_friends WHERE accepted = 1 AND (sender = '{$username}' OR reciever = '{$username}')");
 	$res = ["result" => "ok", "usernames" => []];
 	foreach ($result as $row) 
-		$res["usernames"][] = $row["sender"];
+		$res["usernames"][] = $row["sender"] == $username ? $row["reciever"] : $row["sender"];
 	
     return $res;
 }
