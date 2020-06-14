@@ -86,14 +86,17 @@ namespace FragenGerangel.Gui.Screens
                 wins = losses = draws = 0;
             StateManager.SetColor(Color.Black);
             float var2 = r + 10;
+            StateManager.SetColor(Color.LawnGreen);
             if (wins == 100 && animation.Finished)
                 StateManager.FillCircle(r / 2 + margin, 0, var2);
             else
                 StateManager.FillCircle(r / 2 + margin, 0, var2, wins * 3.6f * animation.Delta);
+            StateManager.SetColor(Color.Black);
             if (draws == 100 && animation.Finished)
                 StateManager.FillCircle(Size.X / 2, 0, var2);
             else
                 StateManager.FillCircle(Size.X / 2, 0, var2, draws * 3.6f * animation.Delta);
+            StateManager.SetColor(Color.Red);
             if (losses == 100 && animation.Finished)
                 StateManager.FillCircle(Size.X - 17 - r / 2 - margin, 0, var2);
             else

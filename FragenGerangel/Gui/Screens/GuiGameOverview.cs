@@ -82,7 +82,8 @@ namespace FragenGerangel.Gui.Screens
                 Location = new Vector(-100, -150),
                 RX = 0.5f,
                 RY = 1,
-                FontColor = Color.White
+                FontColor = Color.White,
+                BackColor = IsRemoteTurn() ? Color.White : Color.Green
             });
             GetComponent<GuiButton>(IsRemoteTurn() ? "Zurück" : "SPIELEN").OnClick += (object sender, Vector e) =>
             {

@@ -38,7 +38,7 @@ namespace FragenGerangel
             DoubleBuffered = true;
             Width = 1280;
             Height = 720;
-
+            Text = "FragenGerangel";
             AddEvents();
 
             timer = new System.Windows.Forms.Timer()
@@ -65,7 +65,7 @@ namespace FragenGerangel
 
         private string[] GetAccount()
         {
-            //return null;
+            return null;
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
             if (!File.Exists(path))
                 return null;

@@ -250,7 +250,7 @@ namespace FragenGerangel.Gui.Screens
             base.Panel_OnClick(sender, e);
             if(e.Y > 50 && e.Y < 150)
             {
-                fragenGerangel.OpenScreen(new GuiStats(fragenGerangel));
+                fragenGerangel.OpenScreen(new GuiStats(fragenGerangel, Globals.Player));
             }
         }
 
