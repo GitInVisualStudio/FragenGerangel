@@ -14,6 +14,7 @@ namespace FragenGerangel.GameBase
         private Round[] rounds;
         private int onlineID;
         private float? eloChange;
+        private bool active;
 
         /// <summary>
         /// Der Gegenspieler
@@ -105,7 +106,19 @@ namespace FragenGerangel.GameBase
         /// <summary>
         /// Wie das Spiel die ELO des Spielers beeinflusst hat. Nur gesetzt, wenn das Spiel vom Spieler beendet wurde
         /// </summary>
-        public float? EloChange { get => eloChange; set => eloChange = value; } 
+        public float? EloChange { get => eloChange; set => eloChange = value; }
+        public bool Active 
+        {
+            get
+            {
+                if (rounds[0] == null)
+                    return active;
+                if (rounds[LastRound] == null || rounds[LastRound].Questions == null || rounds[LastRound].Questions.ToList().Find(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) == null)
+                    return true;
+                return false;
+            }
+            set => active = value; 
+        }
 
         public Game(Player remote, int onlineID)
         {

@@ -165,7 +165,7 @@ namespace FragenGerangel.Utils.API
         /// <summary>
         /// Gibt alle Spiele (ohne initialisierte Runden) zurück.
         /// </summary>
-        private async Task<Game[]> GetDuelIDs()
+        public async Task<Game[]> GetDuelIDs()
         {
             JObject json = new JObject();
             json["auth"] = auth;
@@ -175,7 +175,9 @@ namespace FragenGerangel.Utils.API
             {
                 Player p = new Player(resultJson["games"][i]["username"].ToObject<string>());
                 int onlineID = resultJson["games"][i]["gameID"].ToObject<int>();
+                bool active = resultJson["games"][i]["active"].ToObject<bool>();
                 res[i] = new Game(p, onlineID);
+                res[i].Active = active;
             }
             return res;
         }
@@ -284,7 +286,7 @@ namespace FragenGerangel.Utils.API
         /// <summary>
         /// Befüllt ein Spiel mit initialisierten Runden
         /// </summary>
-        private async Task GetGame(Game g)
+        public async Task GetGame(Game g)
         {
             g.Rounds = await GetRounds(g.OnlineID).ConfigureAwait(false);
             foreach (Round r in g.Rounds)
