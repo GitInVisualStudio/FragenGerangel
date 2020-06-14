@@ -13,6 +13,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace FragenGerangel.Gui.Screens
 {
+    /// <summary>
+    /// Der hauptbildschirm des spieles
+    /// </summary>
     public class GuiMainScreen : GuiScreen
     {
         private FragenGerangel fragenGerangel;
@@ -23,11 +26,18 @@ namespace FragenGerangel.Gui.Screens
         private float scrollDelta;
         private bool shouldScroll;
 
+        /// <summary>
+        /// Spiel instanz für aktualisierungen
+        /// </summary>
+        /// <param name="fragenGerangel"></param>
         public GuiMainScreen(FragenGerangel fragenGerangel) : base()
         {
             this.fragenGerangel = fragenGerangel;
         }
 
+        /// <summary>
+        /// Erstellt alle notwendigen komponenten
+        /// </summary>
         public override void Init()
         {
             update = true;
@@ -40,16 +50,18 @@ namespace FragenGerangel.Gui.Screens
                 FontColor = Color.White
             });
             GetComponent<GuiButton>("Suche").OnClick += OnClick_NewGame;
+            //holt alle notwendigen informationen vom server
             Update().Wait();
             base.Init();
 
-
+            //liste von aktiven spielen
             GuiList<GuiGameInfo> games = new GuiList<GuiGameInfo>("Aktive Spiele")
             {
                 Location = new Vector(10, 200),
                 RWidth = 1,
                 Size = new Vector(0, 0)
             };
+            //liste von vergangenen spielen
             GuiList<GuiGameInfo> gamesClosed = new GuiList<GuiGameInfo>("Vergangene Spiele")
             {
                 Location = new Vector(10, 200),
@@ -59,6 +71,7 @@ namespace FragenGerangel.Gui.Screens
 
             games.SetLocationAndSize(this, Size);
             gamesClosed.SetLocationAndSize(this, Size);
+            //hinzufügen der spiele
             foreach (Game g in this.games)
             {
                 GuiGameInfo info = new GuiGameInfo(g)
@@ -79,7 +92,7 @@ namespace FragenGerangel.Gui.Screens
             gamesClosed.Init();
             games.Init();
 
-
+            //liste von anfragen
             GuiList<GuiPlayerInfo> friendRequests = new GuiList<GuiPlayerInfo>("Freundschaftsanfragen")
             {
                 Location = new Vector(10, 200),
@@ -88,6 +101,7 @@ namespace FragenGerangel.Gui.Screens
             };
             {
                 friendRequests.SetLocationAndSize(this, Size);
+                //hinzufügen der anfragen
                 foreach(Player p in this.friendRequests)
                 {
                     GuiPlayerInfo info = new GuiPlayerInfo(p, "möchte dein Freund sein", 2)
@@ -103,7 +117,7 @@ namespace FragenGerangel.Gui.Screens
                 if(friendRequests.Components.Count > 0)
                     Components.Add(friendRequests);
             }
-
+            //liste von anfragen
             GuiList<GuiPlayerInfo> gameRequests = new GuiList<GuiPlayerInfo>("Spielanfragen")
             {
                 Location = new Vector(10, 200),
@@ -112,6 +126,7 @@ namespace FragenGerangel.Gui.Screens
             };
             {
                 gameRequests.SetLocationAndSize(this, Size);
+                //hinzufügen der anfragen
                 foreach (Player p in this.gameRequests)
                 {
                     GuiPlayerInfo info = new GuiPlayerInfo(p, "möchte spielen", 2)
@@ -127,7 +142,7 @@ namespace FragenGerangel.Gui.Screens
                 if (gameRequests.Components.Count > 0)
                     Components.Add(gameRequests);
             }
-
+            //fügt die listen hinzu falls diese elemente beinhalten
             if (games.Components.Count > 0)
                 Components.Add(games);
             if (gamesClosed.Components.Count > 0)
@@ -135,6 +150,10 @@ namespace FragenGerangel.Gui.Screens
             SearchForUpdates();
         }
 
+        /// <summary>
+        /// Wird aufgeruft wenn gescrollt wird
+        /// </summary>
+        /// <param name="direction"></param>
         public override void OnSroll(int direction)
         {
             base.OnSroll(direction);
@@ -146,6 +165,11 @@ namespace FragenGerangel.Gui.Screens
                 scroll = 0;
         }
 
+        /// <summary>
+        /// akzeptiert oder lehnt spielfragen ab und aktualisiert mit dem sevrer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HandleGameRequest(object sender, bool e)
         {
             //TODO: accept / reject request and refresh
@@ -168,6 +192,11 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        /// <summary>
+        /// akzeptiert oder lehnt freundschaftsanfragen ab und aktualisiert mit dem sevrer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HandleFriendRequest(object sender, bool e)
         {
             //TODO: accept / reject request and refresh
@@ -190,12 +219,18 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        /// <summary>
+        /// schließt den update thread wenn der screen geschlossen wird
+        /// </summary>
         public override void Close()
         {
             update = false;
             base.Close();
         }
 
+        /// <summary>
+        /// guckt jede minute ob eine aktualisierung vorliegt und verarbeitet diese wenn vorhanden
+        /// </summary>
         private void SearchForUpdates()
         {
             new Thread(() =>
@@ -254,22 +289,21 @@ namespace FragenGerangel.Gui.Screens
             }).Start();
         }
 
+        /// <summary>
+        /// öffnet das spiel um die übersicht zu sehen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ActiveGameClick(object sender, bool e)
         {
             GuiGameInfo info = (GuiGameInfo)sender;
             fragenGerangel.OpenScreen(new GuiGameOverview(fragenGerangel, info.Game));
         }
 
-        private void ClickRequest(object sender, bool e)
-        {
-            new Thread(() =>
-            {
-                GuiPlayerInfo info = (GuiPlayerInfo)sender;
-                Globals.APIManager.StartDuel(info.Player).Wait();
-                fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
-            }).Start();
-        }
-
+        /// <summary>
+        /// holt alle informationen des spielers vom server
+        /// </summary>
+        /// <returns></returns>
         private async Task Update()
         {
             gameRequests = await Globals.APIManager.GetDuelRequests();
@@ -277,11 +311,21 @@ namespace FragenGerangel.Gui.Screens
             friendRequests = await Globals.APIManager.GetFriendRequests();
         }
 
+        /// <summary>
+        /// öffnet die suche
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnClick_NewGame(object sender, Vector e)
         {
             fragenGerangel.OpenScreen(new GuiFindOpponent(fragenGerangel));
         }
 
+        /// <summary>
+        /// passt die position des klick events mit dem scrolling an
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected override void Panel_OnClick(object sender, Vector e)
         {
             if(e.Y > 50 && e.Y < 150)
@@ -292,19 +336,25 @@ namespace FragenGerangel.Gui.Screens
             base.Panel_OnClick(sender, e);
         }
 
+        /// <summary>
+        /// passt die position des move events mit dem scrolling an
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected override void Panel_OnMove(object sender, Vector e)
         {
             e = new Vector(e.X, e.Y + scrollDelta);
             base.Panel_OnMove(sender, e);
         }
 
+        /// <summary>
+        /// Zeichnet alle komponenten
+        /// </summary>
         public override void OnRender()
         {
-            //base.OnRender();
-
             StateManager.Push();
             scrollDelta += (scroll - scrollDelta) * StateManager.delta * 10;
-            StateManager.Translate(0, -scrollDelta);
+            StateManager.Translate(0, -scrollDelta); //versetzt um das scrolling
             int offset = 200;
             shouldScroll = false;
             foreach (GuiComponent component in Components)

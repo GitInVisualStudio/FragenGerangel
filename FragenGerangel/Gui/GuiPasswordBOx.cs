@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui
 {
+    /// <summary>
+    /// wie textbox nur verdeckt
+    /// </summary>
     public class GuiPasswordBox : GuiTextBox
     {
         public GuiPasswordBox(string name) : base(name)
@@ -23,7 +26,7 @@ namespace FragenGerangel.Gui
             if (animation.Finished && !Selected && !animation.Incremental && text.Length == 0)
                 animation.Reverse();
             string renderString = "";
-            foreach (char c in text)
+            foreach (char c in text)//zeichnen eines gleichlangen verdeckten strings
                 renderString += "*";
             Color c1 = Color.FromArgb(255, 2, 175, 230);
             Color c2 = Color.FromArgb(255, 84, 105, 230);

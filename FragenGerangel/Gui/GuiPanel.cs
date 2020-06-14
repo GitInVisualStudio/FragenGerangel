@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui
 {
+    /// <summary>
+    /// liste von komponenten
+    /// </summary>
     public class GuiPanel : GuiComponent
     {
         private List<GuiComponent> components;
@@ -31,11 +34,21 @@ namespace FragenGerangel.Gui
             components = new List<GuiComponent>();
         }
 
+        /// <summary>
+        /// übergabe von events an die komponenten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void Panel_OnResize(object sender, Vector e)
         {
             components.ForEach(x => x.Component_OnResize(e));
         }
 
+        /// <summary>
+        /// übergabe von events an die komponenten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void Panel_OnRelease(object sender, Vector e)
         {
             for (int i = components.Count - 1; i >= 0; i--)
@@ -46,6 +59,11 @@ namespace FragenGerangel.Gui
             }
         }
 
+        /// <summary>
+        /// übergabe von events an die komponenten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void Panel_OnMove(object sender, Vector e)
         {
             for (int i = components.Count - 1; i >= 0; i--)
@@ -56,6 +74,11 @@ namespace FragenGerangel.Gui
             }
         }
 
+        /// <summary>
+        /// übergabe von events an die komponenten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void Panel_OnClick(object sender, Vector e)
         {
             for (int i = components.Count - 1; i >= 0; i--)
@@ -73,6 +96,11 @@ namespace FragenGerangel.Gui
             }
         }
 
+        /// <summary>
+        /// übergabe von events an die komponenten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void Panel_OnKeyRelease(object sender, char e)
         {
             for (int i = components.Count - 1; i >= 0; i--)
@@ -83,6 +111,11 @@ namespace FragenGerangel.Gui
             }
         }
 
+        /// <summary>
+        /// übergabe von events an die komponenten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void Panel_OnKeyPress(object sender, char e)
         {
             bool flag = false;
@@ -108,6 +141,9 @@ namespace FragenGerangel.Gui
                 components[0].Selected = true;
         }
 
+        /// <summary>
+        /// fügt alle events hinzu
+        /// </summary>
         public override void Init()
         {
             base.Init();
@@ -127,6 +163,11 @@ namespace FragenGerangel.Gui
             });
         }
 
+        /// <summary>
+        /// übergabe von events an die komponenten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void GuiPanel_OnLeave(object sender, Vector e)
         {
             for (int i = components.Count - 1; i >= 0; i--)
@@ -136,11 +177,20 @@ namespace FragenGerangel.Gui
             }
         }
 
+        /// <summary>
+        /// gibt eine komponente des types T zurück mit dem namen
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <returns></returns>
         protected T GetComponent<T>(string name) where T : GuiComponent
         {
             return (T)components.Find(x => x.Name == name);
         }
 
+        /// <summary>
+        /// zeichnet alle komponenten
+        /// </summary>
         public override void OnRender()
         {
             if (Size.X < 1 || Size.Y < 1)

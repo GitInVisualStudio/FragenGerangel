@@ -13,16 +13,26 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
 {
+    /// <summary>
+    /// Screen zum einloggen und registrieren
+    /// </summary>
     public class GuiLogin : GuiScreen
     {
         private FragenGerangel fragenGerangel;
-        private string displayText = "";
+        private string displayText = "";//info text
 
+        /// <summary>
+        /// spiel instanz für das setzten des spielers
+        /// </summary>
+        /// <param name="fragenGerangel"></param>
         public GuiLogin(FragenGerangel fragenGerangel) : base()
         {
             this.fragenGerangel = fragenGerangel;
         }
 
+        /// <summary>
+        /// erstellt die notwendigen komponenten
+        /// </summary>
         public override void Init()
         {
             Components.Add(new GuiTextBox("Username")
@@ -57,6 +67,12 @@ namespace FragenGerangel.Gui.Screens
             base.Init();
         }
 
+        /// <summary>
+        /// wird aufgerufen wenn auf login gekickt wird
+        /// speichert die logindaten und loggt sich ein
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GuiLogin_OnClick(object sender, Vector e)
         {
             string password = GetComponent<GuiTextBox>("Passwort").Text;
@@ -77,6 +93,9 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        /// <summary>
+        /// Zeichnet die komponenten
+        /// </summary>
         public override void OnRender()
         {
             Color c1 = Color.FromArgb(255, 2, 175, 230);

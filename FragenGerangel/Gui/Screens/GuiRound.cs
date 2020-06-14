@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
 {
+    /// <summary>
+    /// Anzeigen einer runde mit fragen & antwort
+    /// </summary>
     public class GuiRound : GuiScreen
     {
         private int correct;
@@ -23,13 +26,18 @@ namespace FragenGerangel.Gui.Screens
         private string question;
         private QuestionAnswer questionAnswer;
 
-        public event EventHandler<int> OnRoundClose;
+        public event EventHandler<int> OnRoundClose; //wenn die runde beendet wird
         private Game game;
         public string[] Answers { get => answers; set => answers = value; }
         public int Answer;
         public bool Answered { get => answered; set => answered = value; }
         public QuestionAnswer QuestionAnswer { get => questionAnswer; set => questionAnswer = value; }
 
+        /// <summary>
+        /// game instanz für das aktualisieren und informationen
+        /// </summary>
+        /// <param name="questions"></param>
+        /// <param name="game"></param>
         public GuiRound(QuestionAnswer questions, Game game) : base()
         {
             this.game = game;
@@ -39,8 +47,12 @@ namespace FragenGerangel.Gui.Screens
             category = questions.Question.Category;
         }
 
+        /// <summary>
+        /// erstellt alle notwendigen komponenten mit den fragen
+        /// </summary>
         public override void Init()
         {
+            //vermischt die antworten
             List<string> var1 = new List<string>();
             Random ra = new Random();
             for (int i = 0; i < 4; i++)
@@ -114,6 +126,12 @@ namespace FragenGerangel.Gui.Screens
             base.Init();
         }
 
+        /// <summary>
+        /// wenn ein button geklickt wird, wird dieser als antwort eingeloggt
+        /// zeigt direkt ob es richtig oder falsch war
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ScreenClicked(object sender, Vector e)
         {
             if(((GuiButton)sender).Name == "Weiter")
@@ -131,8 +149,10 @@ namespace FragenGerangel.Gui.Screens
                 GuiButton button = (GuiButton)sender;
                 Answer = original.ToList().IndexOf(button.Name);
                 QuestionAnswer.AnswerPlayer = Answer;
+                //updaten der antwort
                 Globals.APIManager.UploadQuestionAnswer(QuestionAnswer).Wait();
                 Answered = true;
+                //setzen der farben der buttons
                 if (button.Name == original[correct])
                 {
                     button.BackColor = Color.LawnGreen;
@@ -157,6 +177,9 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        /// <summary>
+        /// Zeichnet alle komponenten
+        /// </summary>
         public override void OnRender()
         {
             base.OnRender();
@@ -190,6 +213,7 @@ namespace FragenGerangel.Gui.Screens
             StateManager.FillCircle(Size.X - 150, height / 2, 70);
             RenderUtils.DrawPlayer(game.RemotePlayer.Name, new Vector(Size.X - 150, height / 2), 60);
 
+            //zeichnen der antwort des gegners wenn spieler geantwortet hat
             if (renderEnemyAnswer)
             {
                 if(QuestionAnswer.AnswerRemotePlayer != -1)

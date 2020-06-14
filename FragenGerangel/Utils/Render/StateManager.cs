@@ -147,6 +147,15 @@ namespace FragenGerangel.Utils.Render
             g.FillEllipse(new SolidBrush(Color), x - r / 2, y - r / 2, r, r);
         }
 
+        /// <summary>
+        /// zeichnet einen kreis mit fabverlauf
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="r"></param>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <param name="angle"></param>
         public static void FillGradientCircle(float x, float y, float r, Color c1, Color c2, float angle = 90)
         {
             LinearGradientBrush brush = GetGradientBrush(new Vector(x - r/2f, y - r/2f), new Vector(r + 2, r + 2), c1, c2, angle);
@@ -314,9 +323,20 @@ namespace FragenGerangel.Utils.Render
                 g.SmoothingMode = SmoothingMode.AntiAlias;
         }
 
+        /// <summary>
+        /// zeichnet ein polygon mit den punkten
+        /// </summary>
+        /// <param name="points"></param>
         public static void DrawPolygon(PointF[] points) => g.DrawPolygon(new Pen(new SolidBrush(Color)), points);
         public static void FillPolygon(PointF[] points) => g.FillPolygon(new SolidBrush(Color), points);
 
+        /// <summary>
+        /// zeichnet ein rundes "rechteck"
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="size"></param>
+        /// <param name="r"></param>
+        /// <param name="res"></param>
         public static void DrawRoundRect(Vector location, Vector size, float r = 10, int res = 100) 
             => g.DrawPolygon(new Pen(new SolidBrush(Color)), GetRoundRectPoints(location.X, location.Y, size.X, size.Y, r, res));
 
@@ -326,6 +346,16 @@ namespace FragenGerangel.Utils.Render
         public static void FillRoundRect(Vector location, Vector size, float r = 10, int res = 100) 
             => FillRoundRect(location.X, location.Y, size.X, size.Y, r, res);
 
+        /// <summary>
+        /// gibt die punkte für ein rundes "rechteck" zurück
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="r"></param>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public static PointF[] GetRoundRectPoints(float x, float y, float width, float height, float r, int res)
         {
             if (height <= 0 || width <= 0)
@@ -345,6 +375,16 @@ namespace FragenGerangel.Utils.Render
             return points;
         }
 
+        /// <summary>
+        /// zeichnet ein rundes "rechteck" mit fabverlauf
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="size"></param>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <param name="angle"></param>
+        /// <param name="r"></param>
+        /// <param name="res"></param>
         public static void FillGradientRoundRect(Vector location, Vector size, Color c1, Color c2, float angle = 0.0f, float r = 10, int res = 100)
         {
             g.FillPolygon(GetGradientBrush(location, size, c1, c2, angle), GetRoundRectPoints(location.X, location.Y, size.X, size.Y, r, res));
@@ -353,6 +393,14 @@ namespace FragenGerangel.Utils.Render
         private static LinearGradientBrush GetGradientBrush(Vector location, Vector size, Color c1, Color c2, float angle) 
             => new LinearGradientBrush(new Rectangle((int)location.X, (int)location.Y, (int)size.X, (int)size.Y), c1, c2, angle);
 
+        /// <summary>
+        /// zeichnet ein rechteck mit fabverlauf
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="size"></param>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <param name="angle"></param>
         public static void FillGradientRect(Vector location, Vector size, Color c1, Color c2, float angle = 0.0f)
         {
             g.FillRectangle(GetGradientBrush(location, size, c1, c2, angle), location.X, location.Y, size.X, size.Y);

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui
 {
+    /// <summary>
+    /// stellt informationen zu einem spieler dar
+    /// </summary>
     public class GuiPlayerInfo : GuiButton
     {
         private Player player;
@@ -18,6 +21,13 @@ namespace FragenGerangel.Gui
         public event EventHandler<bool> InfoClick;
         private float var3, var4, var5, var6;
 
+        /// <summary>
+        /// spieler instanz und text was gezeichnet werden solle
+        /// mode für die modus der anzeige //0 = spielanfrage, 1 = freundschaftsanfrage, 2 = annahme/ablehnung
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="text"></param>
+        /// <param name="mode"></param>
         public GuiPlayerInfo(Player player, string text, int mode) : base(player.Name)
         {
             Player = player;
@@ -27,6 +37,12 @@ namespace FragenGerangel.Gui
             OnMove += GuiPlayerInfo_OnMove;
         }
 
+        /// <summary>
+        /// wird aufgerufen beim überfahren des komponente
+        /// wenn etwas klickbares gefahren wird, wird dieses dunkler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GuiPlayerInfo_OnMove(object sender, Vector e)
         {
             Vector position;
@@ -61,6 +77,11 @@ namespace FragenGerangel.Gui
             }
         }
 
+        /// <summary>
+        /// gibt zurück ob der entsprechende modi angeklickt wurde, bzw was
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GuiPlayerInfo_OnClick(object sender, Vector e)
         {
             Vector position;
@@ -106,6 +127,9 @@ namespace FragenGerangel.Gui
         public int Mode { get => mode; set => mode = value; }
         public string Text { get => text; set => text = value; }
 
+        /// <summary>
+        /// zeichnet die informationen und die einzelnen modi
+        /// </summary>
         public override void OnRender()
         {
             StateManager.SetFont(new Font("Arial", 12, FontStyle.Bold));
@@ -193,6 +217,12 @@ namespace FragenGerangel.Gui
             }
         }
 
+        /// <summary>
+        /// multipliziert einen wert mit einer farbe
+        /// </summary>
+        /// <param name="c1"></param>
+        /// <param name="var1"></param>
+        /// <returns></returns>
         private Color GetColor(Color c1, float var1)
         {
             int r = c1.R - (int)(c1.R * var1);

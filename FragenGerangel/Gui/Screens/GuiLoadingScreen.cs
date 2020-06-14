@@ -11,14 +11,22 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
 {
+    /// <summary>
+    /// Screen zum wechseln zu anderen
+    /// </summary>
     public class GuiLoadingScreen : GuiScreen
     {
         private GuiScreen next, current;
         private FragenGerangel fragenGerangel;
-        //private Animation animation;
         private float time;
-        private bool flag;
+        private bool flag; //hat den anderen screen geöffnet
 
+        /// <summary>
+        /// momentaner & nächster screen + spiel instanz zum setzten
+        /// </summary>
+        /// <param name="nextScreen"></param>
+        /// <param name="currentScreen"></param>
+        /// <param name="fragenGerangel"></param>
         public GuiLoadingScreen(GuiScreen nextScreen, GuiScreen currentScreen, FragenGerangel fragenGerangel) : base()
         {
             current = currentScreen;
@@ -30,27 +38,37 @@ namespace FragenGerangel.Gui.Screens
             animation.Fire();
         }
 
+        /// <summary>
+        /// öffnen des ladebildschirms
+        /// </summary>
         public override void Open()
         {
             Opend = true;
         }
 
+        /// <summary>
+        /// schließen des ladebildschirms
+        /// </summary>
         public override void Close()
         {
             Opend = false;
         }
 
+        /// <summary>
+        /// Zeichnet den ladebildschirm und initialisiert den nächsten screen in einem anderen thread
+        /// </summary>
         public override void OnRender()
         {
             base.OnRender();
             if (!Opend)
                 return;
+            //gucken ob der andere screen geschlossen ist
             if(animation.Incremental && flag && (current != null ? !current.Opend : true) && animation.Finished && fragenGerangel.currentScreen == current)
             {
                 flag = false;
                 new Thread(() =>
                 {
-                    while (Globals.APIManager == null && current != null)
+                    while (Globals.APIManager == null && current != null) //warten auf die API => async
                         Thread.Sleep(100);
                     next.SetLocationAndSize(this, Size);
                     next.Init();
@@ -70,8 +88,10 @@ namespace FragenGerangel.Gui.Screens
             Color c2 = Color.FromArgb((int)(255 * animation.Delta), 84, 105, 230);
             StateManager.FillGradientRect(Location, Size, c1, c2);
 
+            //zeitreferenz
             time += StateManager.delta * 100 * 3;
 
+            //zeichnen des kreises
             float var1 = Math.Abs(MathUtils.Sin(time * 0.35f) * 120);
             float var2 = Math.Abs(MathUtils.Sin(time * 0.35f) * 120);
 

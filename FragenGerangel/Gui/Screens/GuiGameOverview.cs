@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
 {
+    /// <summary>
+    /// Zeicht einen überblick über das spiel
+    /// </summary>
     public class GuiGameOverview : GuiScreen
     {
         private Game game;
@@ -19,12 +22,22 @@ namespace FragenGerangel.Gui.Screens
         private GuiRound round;
         private int index;
 
+        /// <summary>
+        /// Spielinstanz für die notwendige synchronisation
+        /// </summary>
+        /// <param name="fragenGerangel"></param>
+        /// <param name="game"></param>
         public GuiGameOverview(FragenGerangel fragenGerangel, Game game) : base()
         {
             this.game = game;
             this.fragenGerangel = fragenGerangel;
         }
 
+        /// <summary>
+        /// geht zurück wenn der escape gedrückt wird
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected override void Panel_OnKeyRelease(object sender, char e)
         {
             if (e == 27)
@@ -33,18 +46,24 @@ namespace FragenGerangel.Gui.Screens
             base.Panel_OnKeyRelease(sender, e);
         }
 
+        /// <summary>
+        /// wird aufgerufen wenn eine runde beender ist um alles zu aktualisieren und eine neue 
+        /// runde zu öffnen falls nötig
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">welche antwort gewählt wurde</param>
         private void Round_OnClose(object sender, int e)
         {
-            if(index < 3)
+            if(index < 3)//antwort setzen
                 game.LastRound.Questions[index].AnswerPlayer = e;
             index++;
-            if (index < 3)
+            if (index < 3)//runde noch nicht zu ende
             {
                 round = new GuiRound(game.LastRound.Questions[index], game);
                 round.OnRoundClose += Round_OnClose;
                 fragenGerangel.OpenScreen(round);
             }
-            else
+            else//runde zu ende und spiel wird aktualisiert
             {
                 GuiRound round = (GuiRound)sender;
                 new Thread(() =>
@@ -55,10 +74,12 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        /// <summary>
+        /// Erstellt alle komponenten
+        /// </summary>
         public override void Init()
         {
-            //Globals.APIManager.GetGame(game).Wait();
-            if (!game.Active)
+            if (!game.Active)//wenn spiel zu ende kann man nicht mehr spielen
             {
                 Components.Add(new GuiButton("Zurück")
                 {
@@ -76,6 +97,7 @@ namespace FragenGerangel.Gui.Screens
                 };
                 return;
             }
+            //Falls der gegner dran ist kann man nicht spielen sonst schon
             Components.Add(new GuiButton(IsRemoteTurn() ? "Zurück" : "SPIELEN")
             {
                 Size = new Vector(200, 100),
@@ -92,7 +114,7 @@ namespace FragenGerangel.Gui.Screens
                     fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
                     return;
                 }
-                if (game.LastRound.Category == null)
+                if (game.LastRound.Category == null)//wenn die kategorie der runde noch nicht gesetzt wurde wird diese ausgewählt
                 {
                     GuiCategory category = new GuiCategory(game);
                     bool flag = true;
@@ -102,6 +124,7 @@ namespace FragenGerangel.Gui.Screens
                         {
                             if (!flag)
                                 return;
+                            //aktualisieren der kategorie und des spieles + aufrufen der runde
                             flag = false;
                             category.animation.Finished = true;
                             category.animation.Incremental = true;
@@ -116,6 +139,7 @@ namespace FragenGerangel.Gui.Screens
                     fragenGerangel.OpenScreen(category);
                     return;
                 }
+                //öffnet die letze frage welche nicht beantwortet wurde in der runde
                 int index = 0;
                 for(int i = 0; i < game.LastRound.Questions.Length; i++)
                     if(game.LastRound.Questions[i].AnswerPlayer == -1)
@@ -132,6 +156,9 @@ namespace FragenGerangel.Gui.Screens
             base.Init();
         }
 
+        /// <summary>
+        /// Zeichnet alle komponenten
+        /// </summary>
         public override void OnRender()
         {
             base.OnRender();
@@ -141,7 +168,6 @@ namespace FragenGerangel.Gui.Screens
             StateManager.FillGradientRect(Location, new Vector(Size.X, offset), c1, c2);
             StateManager.SetColor(Color.White);
             StateManager.SetFont(new Font("comfortaa", 20));
-            //StateManager.SetFont(FontUtils.DEFAULT_FONT);
             StateManager.DrawCenteredString("FragenGerangel", Size.X / 2, offset / 2);
 
             StateManager.FillGradientRect(new Vector(0, offset), new Vector(Size.X, offset * 2), c1, c2);
@@ -157,9 +183,14 @@ namespace FragenGerangel.Gui.Screens
             float var2 = Size.X / 2 + width;
             RenderUtils.DrawPlayer(Globals.Player.Name, new Vector(var1 / 2 + 50, offset * 3), 100);
             RenderUtils.DrawPlayer(game.RemotePlayer.Name, new Vector(var2 + var1 / 2 - 50, offset * 3), 100);
+            //rendern der spiel statistik
             RenderTable();
         }
 
+        /// <summary>
+        /// gibt zurück ob der gegner am zug ist
+        /// </summary>
+        /// <returns></returns>
         private bool IsRemoteTurn()
         {
             if (game.LastRound.Category == null)
@@ -170,6 +201,9 @@ namespace FragenGerangel.Gui.Screens
             return true;
         }
 
+        /// <summary>
+        /// Zeichnet den verlauf des spieles und wer am zug ist
+        /// </summary>
         private void RenderTable()
         {
             int offset = 250;
@@ -205,6 +239,7 @@ namespace FragenGerangel.Gui.Screens
                 StateManager.Push();
                 StateManager.Translate(0, offset);
                 bool var1 = true;
+                //wenn runde die letzte werden keine mehr gezeichnet
                 if(flag)
                     var1 = RenderRound(game.Rounds[i]);
                 StateManager.Pop();
@@ -223,6 +258,11 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        /// <summary>
+        /// Zeichnet den verlauf einer einzelnen runde und gibt zurück ob diese die letzte ist
+        /// </summary>
+        /// <param name="round"></param>
+        /// <returns></returns>
         private bool RenderRound(Round round)
         {
             bool flag = true;

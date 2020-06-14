@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui
 {
+    /// <summary>
+    /// Oberklasse aller komponenten
+    /// beinhaltet informationen zu größe, position usw.
+    /// und behandelt alle events
+    /// </summary>
     public abstract class GuiComponent
     {
         private bool hovering;
@@ -158,15 +163,6 @@ namespace FragenGerangel.Gui
             }
         }
 
-        //public string Name { get => name; set => name = value; }
-        //public bool Selected { get => selected; set => selected = value; }
-        //public virtual Color BackColor { get => backColor; set => backColor = value; }
-        //public Color FontColor { get => fontColor; set => fontColor = value; }
-        //public float RX { get => rX; set => rX = value; }
-        //public float RY { get => rY; set => rY = value; }
-        //public float RWidth { get => rWidth; set => rWidth = value; }
-        //public float RHeight { get => rHeight; set => rHeight = value; }
-
         public void Component_OnResize(Vector size) => OnResize?.Invoke(this, size);
         public void Component_OnClick(Vector location) => OnClick?.Invoke(this, location);
         public void Component_OnRelease(Vector location) => OnRelease?.Invoke(this, location);
@@ -176,6 +172,11 @@ namespace FragenGerangel.Gui
         public void Component_OnKeyPress(char keyChar) => OnKeyPress?.Invoke(this, keyChar);
         public void Component_OnKeyRelease(char keyChar) => OnKeyRelease?.Invoke(this, keyChar);
 
+        /// <summary>
+        /// gibt zurück ob der mauscursor über der komponente ist
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public virtual bool OnHover(Vector location)
         {
             if(location.X > this.location.X && location.X < this.location.X + size.X && this.location.Y < location.Y && this.location.Y + size.Y > location.Y)
@@ -190,8 +191,8 @@ namespace FragenGerangel.Gui
         }
 
         /// <summary>
-        /// float = absolute Position
-        /// double = relative Position
+        /// Gundkonstruktoren mit position und größe
+        /// flaot = absolut, double = relativ
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -230,14 +231,24 @@ namespace FragenGerangel.Gui
 
         }
 
+        /// <summary>
+        /// fügt die events hinzu
+        /// </summary>
         public virtual void Init()
         {
             OnResize += SetLocationAndSize;
         }
         
-
+        /// <summary>
+        /// methode zum zeichnen der komponente
+        /// </summary>
         public abstract void OnRender();
 
+        /// <summary>
+        /// passt größe und position relativ zur fenster größe an
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="screenSize"></param>
         public virtual void SetLocationAndSize(object sender, Vector screenSize)
         {
             Location = new Vector(RX != -1 ?

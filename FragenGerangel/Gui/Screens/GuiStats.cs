@@ -11,12 +11,20 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
 {
+    /// <summary>
+    /// zeigt die statistik eines spielers
+    /// </summary>
     public class GuiStats : GuiScreen
     {
         private Statistic stats;
         private FragenGerangel fragenGerangel;
         private Player player;
 
+        /// <summary>
+        /// spieler & game instanz für die informationen
+        /// </summary>
+        /// <param name="fragenGerangel"></param>
+        /// <param name="player"></param>
         public GuiStats(FragenGerangel fragenGerangel, Player player = null) : base()
         {
             this.fragenGerangel = fragenGerangel;
@@ -27,6 +35,9 @@ namespace FragenGerangel.Gui.Screens
             animation.Speed = 0.5f;
         }
 
+        /// <summary>
+        /// holt alle notwendigen informationen vom sever
+        /// </summary>
         public override void Init()
         {
             base.Init();
@@ -35,6 +46,11 @@ namespace FragenGerangel.Gui.Screens
             stats = task.Result;
         }
 
+        /// <summary>
+        /// geht zurück wenn der escape gedrückt wird
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected override void Panel_OnKeyRelease(object sender, char e)
         {
             if (e == 27)
@@ -43,6 +59,9 @@ namespace FragenGerangel.Gui.Screens
             base.Panel_OnKeyRelease(sender, e);
         }
 
+        /// <summary>
+        /// Zeichnet die statistik
+        /// </summary>
         public override void OnRender()
         {
             base.OnRender();
@@ -78,7 +97,9 @@ namespace FragenGerangel.Gui.Screens
             StateManager.Translate(0, height + 20);
             StateManager.SetColor(Color.LightGray);
             StateManager.FillRoundRect(10, -r/2 - 10, Size.X - 17 - 20, r + 50);
+            //insgesamte spiele
             int games = stats.Losses + stats.Wins + stats.PerfectGames + stats.Draws;
+            //prozentuale evrteilung
             int wins = (int)((stats.Wins / (float)games) * 100);
             int losses = (int)((stats.Losses/ (float)games) * 100);
             int draws = (int)((stats.Draws / (float)games) * 100);
@@ -86,21 +107,13 @@ namespace FragenGerangel.Gui.Screens
                 wins = losses = draws = 0;
             StateManager.SetColor(Color.Black);
             float var2 = r + 10;
+            
             StateManager.SetColor(Color.LawnGreen);
-            if (wins == 100 && animation.Finished)
-                StateManager.FillCircle(r / 2 + margin, 0, var2);
-            else
-                StateManager.FillCircle(r / 2 + margin, 0, var2, wins * 3.6f * animation.Delta);
+            StateManager.FillCircle(r / 2 + margin, 0, var2, wins * 3.6f * animation.Delta);
             StateManager.SetColor(Color.Black);
-            if (draws == 100 && animation.Finished)
-                StateManager.FillCircle(Size.X / 2, 0, var2);
-            else
-                StateManager.FillCircle(Size.X / 2, 0, var2, draws * 3.6f * animation.Delta);
+            StateManager.FillCircle(Size.X / 2, 0, var2, draws * 3.6f * animation.Delta);
             StateManager.SetColor(Color.Red);
-            if (losses == 100 && animation.Finished)
-                StateManager.FillCircle(Size.X - 17 - r / 2 - margin, 0, var2);
-            else
-                StateManager.FillCircle(Size.X - 17 - r / 2 - margin, 0, var2, losses * 3.6f * animation.Delta);
+            StateManager.FillCircle(Size.X - 17 - r / 2 - margin, 0, var2, losses * 3.6f * animation.Delta);
 
             StateManager.SetColor(Color.White);
             StateManager.FillCircle(r/2 + margin, 0, r);
