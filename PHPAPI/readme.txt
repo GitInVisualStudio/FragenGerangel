@@ -62,6 +62,7 @@ output:
 	[
 		int gameID // id des Spiels
 		string username // gegen wen gespielt wird
+		bool active
 	]
 beschreibung:
 	gibt alle laufenden Spiele des Aufrufenden zurück
@@ -134,3 +135,21 @@ output:
 		string category
 		float percentage
 	]
+	
+searchPlayer.php
+input:
+	string query
+output
+	string[] usernames
+	
+declineFriendRequest.php
+input:
+	string username
+output:
+	void
+
+declineDuelRequest.php
+input:
+	string username
+output:
+	void

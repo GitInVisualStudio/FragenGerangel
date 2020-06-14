@@ -143,7 +143,11 @@ namespace FragenGerangel.Gui.Screens
             }
             else
             {
-
+                new Thread(() =>
+                {
+                    Globals.APIManager.DeclineDuelRequest(info.Player).Wait();
+                    fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                }).Start();
             }
         }
 
@@ -161,7 +165,11 @@ namespace FragenGerangel.Gui.Screens
             }
             else
             {
-
+                new Thread(() =>
+                {
+                    Globals.APIManager.DeclineFriendRequest(info.Player).Wait();
+                    fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                }).Start();
             }
         }
 

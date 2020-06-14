@@ -351,6 +351,21 @@ namespace FragenGerangel.Utils.API
             return p;
         }
 
+        public async Task DeclineFriendRequest(Player p)
+        {
+            JObject json = new JObject();
+            json["auth"] = auth;
+            json["username"] = p.Name;
+            await PostReturnJson("declineFriendRequest.php", json).ConfigureAwait(false);
+        }
+
+        public async Task DeclineDuelRequest(Player p)
+        {
+            JObject json = new JObject();
+            json["auth"] = auth;
+            json["username"] = p.Name;
+            await PostReturnJson("declineDuelRequest.php", json).ConfigureAwait(false);
+        }
 
         Game[] games; // DEBUG
         /// <summary>

@@ -29,7 +29,7 @@ function start(array $post) : array {
 	if ($category_id < 1 || $category_id > 3)
 		throw new WrongFormatException();
 	
-	$result = $connection->query("SELECT r.id AS id, r.cat_1 AS cat_1, r.cat_2 AS cat_2, r.cat_3 AS cat_3 FROM `round` r INNER JOIN game g ON r.game = g.id WHERE g.id = '{$game_id}' AND r.category IS NULL AND ((g.player_1 = '{$username}' AND r.`order` % 2 = 0) OR (g.player_2 = '{$username}' AND r.`order` % 2 = 1))");
+	$result = $connection->query("SELECT r.id AS id, r.cat_1 AS cat_1, r.cat_2 AS cat_2, r.cat_3 AS cat_3 FROM `round` r INNER JOIN game g ON r.game = g.id WHERE g.id = '{$game_id}' AND r.category IS NULL"); //AND ((g.player_1 = '{$username}' AND r.`order` % 2 = 0) OR (g.player_2 = '{$username}' AND r.`order` % 2 = 1))");
 	if (sizeof($result) == 0)
 		throw new InsufficientPermissionsException();
 	
