@@ -12,6 +12,9 @@ namespace FragenGerangel.GameBase
     {
         private string name;
 
+        /// <summary>
+        /// Der Benutzername. Eindeutig.
+        /// </summary>
         public string Name
         {
             get

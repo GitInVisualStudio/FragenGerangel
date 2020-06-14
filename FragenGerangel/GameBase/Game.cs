@@ -16,6 +16,9 @@ namespace FragenGerangel.GameBase
         private float? eloChange;
         private bool active;
 
+        /// <summary>
+        /// Der Gegenspieler
+        /// </summary>
         public Player RemotePlayer
         {
             get
@@ -29,6 +32,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Runden des Spiels. Die Länge ist immer 6, falls die Runde noch nicht initialisiert wurde ist sie hier null.
+        /// </summary>
         public Round[] Rounds
         {
             get
@@ -42,34 +48,25 @@ namespace FragenGerangel.GameBase
             }
         }
 
-        public Round LastRound
+        /// <summary>
+        /// Die letzte initialisierte Runde. Falls das Spiel noch nicht initialisiert wurde = null
+        /// </summary>
+        public int LastRound
         {
             get
             {
                 if (rounds[0] == null)
-                    return null;
+                    return 0;
                 for (int i = 0; i < rounds.Length; i++)
                     if (rounds[i] == null)
-                        return rounds[i - 1];
-                return rounds[rounds.Length - 1];
+                        return i - 1;
+                return rounds.Length;
             }
         }
 
-        public bool Active
-        {
-            get
-            {
-                if (rounds[0] == null)
-                    return active;
-                if (rounds.ToList().FindIndex(x => x == null) != -1)
-                    return true;
-                foreach (Round r in rounds)
-                    if (r == null || r.Questions == null || r.Questions.ToList().FindIndex(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) != -1)
-                        return true;
-                return false;
-            }
-            set => active = value;
-        }
+        /// <summary>
+        /// Der Punktestand des Spielers
+        /// </summary>
         public int ScorePlayer
         {
             get
@@ -84,6 +81,9 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// Punktestand des Gegenspielers
+        /// </summary>
         public int ScoreRemotePlayer
         {
             get
@@ -98,40 +98,36 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        /// <summary>
+        /// ID des Spiels
+        /// </summary>
         public int OnlineID { get => onlineID; set => onlineID = value; }
 
         /// <summary>
-        /// How this game influenced the player's elo
+        /// Wie das Spiel die ELO des Spielers beeinflusst hat. Nur gesetzt, wenn das Spiel vom Spieler beendet wurde
         /// </summary>
-        public float? EloChange { get => eloChange; set => eloChange = value; } 
+        public float? EloChange { get => eloChange; set => eloChange = value; }
+        public bool Active 
+        {
+            get
+            {
+                if (rounds[0] == null)
+                    return active;
+                if (rounds.ToList().FindIndex(x => x == null) != -1)
+                    return true;
+                foreach (Round r in rounds)
+                    if (r == null || r.Questions == null || r.Questions.ToList().FindIndex(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) != -1)
+                        return true;
+                return false;
+            }
+            set => active = value; 
+        }
 
         public Game(Player remote, int onlineID)
         {
             this.remotePlayer = remote;
             this.onlineID = onlineID;
             this.rounds = new Round[6];
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(obj is Game)
-            {
-                Game game = (Game)obj;
-                if (game.Active != Active)
-                    return false;
-                for (int i = 0; i < rounds.Length; i++)
-                {
-                    if (rounds[i] == null && game.Rounds[i] != null)
-                        return false;
-                    if (rounds[i] != null && game.Rounds[i] == null)
-                        return false;
-                    if(rounds[i] != null)
-                        if (!rounds[i].Equals(game.Rounds[i]))
-                            return false;
-                }
-                return game.RemotePlayer.Name == RemotePlayer.Name;
-            }
-            return base.Equals(obj);
         }
     }
 }
