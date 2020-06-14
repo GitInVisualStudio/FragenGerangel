@@ -117,6 +117,8 @@ namespace FragenGerangel.GameBase
             if(obj is Game)
             {
                 Game game = (Game)obj;
+                if (game.Active != Active)
+                    return false;
                 for (int i = 0; i < rounds.Length; i++)
                 {
                     if (rounds[i] == null && game.Rounds[i] != null)

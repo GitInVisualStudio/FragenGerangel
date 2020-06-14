@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
@@ -18,18 +19,20 @@ namespace FragenGerangel.Gui.Screens
         private string[] original;
         private bool answered = false;
         private string category;
+        private bool renderEnemyAnswer;
         private string question;
         private QuestionAnswer questionAnswer;
 
         public event EventHandler<int> OnRoundClose;
-
+        private Game game;
         public string[] Answers { get => answers; set => answers = value; }
         public int Answer;
         public bool Answered { get => answered; set => answered = value; }
         public QuestionAnswer QuestionAnswer { get => questionAnswer; set => questionAnswer = value; }
 
-        public GuiRound(QuestionAnswer questions) : base()
+        public GuiRound(QuestionAnswer questions, Game game) : base()
         {
+            this.game = game;
             QuestionAnswer = questions;
             answers = questions.Question.Answers;
             question = questions.Question.Q;
@@ -124,6 +127,7 @@ namespace FragenGerangel.Gui.Screens
             }
             if (sender is GuiButton && !Answered)
             {
+                renderEnemyAnswer = true;
                 GuiButton button = (GuiButton)sender;
                 Answer = original.ToList().IndexOf(button.Name);
                 QuestionAnswer.AnswerPlayer = Answer;
@@ -131,13 +135,25 @@ namespace FragenGerangel.Gui.Screens
                 Answered = true;
                 if (button.Name == original[correct])
                 {
-                    button.CurrentColor = Color.LawnGreen;
+                    button.BackColor = Color.LawnGreen;
                 }
                 else
                 {
-                    button.CurrentColor = Color.Red;
+                    button.BackColor = Color.Red;
                 }
-                GetComponent<GuiButton>("Weiter").CurrentColor = Color.LawnGreen;
+                if (QuestionAnswer.AnswerRemotePlayer != -1)
+                {
+                    button = GetComponent<GuiButton>(original[QuestionAnswer.AnswerRemotePlayer]);
+                    if (button.Name == original[correct])
+                    {
+                        button.BackColor = Color.LawnGreen;
+                    }
+                    else
+                    {
+                        button.BackColor = Color.Red;
+                    }
+                }
+                GetComponent<GuiButton>("Weiter").BackColor = Color.LawnGreen;
             }
         }
 
@@ -159,6 +175,18 @@ namespace FragenGerangel.Gui.Screens
             StateManager.SetColor(Color.White);
             StateManager.DrawCenteredString(category, Size.X / 2, height + 20);
             StateManager.FillGradientRect(Location, new Vector(Size.X, height), c1, c2);
+
+            if (renderEnemyAnswer)
+            {
+                if(QuestionAnswer.AnswerRemotePlayer != -1)
+                {
+                    GuiButton button = GetComponent<GuiButton>(original[QuestionAnswer.AnswerRemotePlayer]);
+                    RenderUtils.DrawPlayer(game.RemotePlayer.Name, new Vector(button.Location.X + button.Size.X / 3, button.Location.Y), 35, false);
+                    StateManager.SetColor(Color.White);
+                    StateManager.DrawCenteredString(game.RemotePlayer.Name, button.Location.X + button.Size.X / 3, button.Location.Y + 25);
+                }
+            }
+
         }
 
     }

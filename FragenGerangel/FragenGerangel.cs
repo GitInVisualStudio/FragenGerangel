@@ -134,7 +134,7 @@ namespace FragenGerangel
         {
             base.OnFormClosed(e);
             if(currentScreen != null)
-                currentScreen.Opend = false;
+                currentScreen.Close();
             loadingScreen = null;
         }
 

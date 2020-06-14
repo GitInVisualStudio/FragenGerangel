@@ -40,7 +40,7 @@ namespace FragenGerangel.Gui.Screens
             index++;
             if (index < 3)
             {
-                round = new GuiRound(game.LastRound.Questions[index]);
+                round = new GuiRound(game.LastRound.Questions[index], game);
                 round.OnRoundClose += Round_OnClose;
                 fragenGerangel.OpenScreen(round);
             }
@@ -83,7 +83,7 @@ namespace FragenGerangel.Gui.Screens
                 RX = 0.5f,
                 RY = 1,
                 FontColor = Color.White,
-                BackColor = IsRemoteTurn() ? Color.White : Color.Green
+                BackColor = IsRemoteTurn() ? Color.Gray : Color.LawnGreen
             });
             GetComponent<GuiButton>(IsRemoteTurn() ? "Zurück" : "SPIELEN").OnClick += (object sender, Vector e) =>
             {
@@ -108,7 +108,7 @@ namespace FragenGerangel.Gui.Screens
                             Globals.APIManager.ChooseCategory(game, category.Category + 1).Wait();
                             Task task = Globals.APIManager.GetGame(game);
                             task.Wait();
-                            round = new GuiRound(game.LastRound.Questions[0]);
+                            round = new GuiRound(game.LastRound.Questions[0], game);
                             round.OnRoundClose += Round_OnClose;
                             fragenGerangel.OpenScreen(round);
                         }).Start();
@@ -116,17 +116,20 @@ namespace FragenGerangel.Gui.Screens
                     fragenGerangel.OpenScreen(category);
                     return;
                 }
-                round = new GuiRound(game.LastRound.Questions[0]);
+                int index = 0;
+                for(int i = 0; i < game.LastRound.Questions.Length; i++)
+                    if(game.LastRound.Questions[i].AnswerPlayer == -1)
+                    {
+                        this.index = i;
+                        index = i;
+                        break;
+                    }
+                round = new GuiRound(game.LastRound.Questions[index], game);
                 round.OnRoundClose += Round_OnClose;
                 fragenGerangel.OpenScreen(round);
             };
             animation.Speed = 0.6f;
             base.Init();
-        }
-
-        public override void Open()
-        {
-            base.Open();
         }
 
         public override void OnRender()

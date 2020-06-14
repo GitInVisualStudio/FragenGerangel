@@ -110,17 +110,24 @@ namespace FragenGerangel.Gui
 
         public override void OnRender()
         {
-            //throw new NotImplementedException();
-            //TODO: Render the shit
+
+            int r = CurrentColor.R + (int)((BackColor.R - CurrentColor.R) * StateManager.delta * 5);
+            int g = CurrentColor.G + (int)((BackColor.G - CurrentColor.G) * StateManager.delta * 5);
+            int b = CurrentColor.B + (int)((BackColor.B - CurrentColor.B) * StateManager.delta * 5);
+            r = Math.Abs(r % 256);
+            g = Math.Abs(g % 256);
+            b = Math.Abs(b % 256);
+            CurrentColor = Color.FromArgb(r, g, b);
+
             if (CustomRender == null)
             {
                 var1 += (var2 - var1) * StateManager.delta * 10;
-                int r = CurrentColor.R - (int)(CurrentColor.R * (0.3f + var1));
-                int g = CurrentColor.G - (int)(CurrentColor.G * (0.3f + var1));
-                int b = CurrentColor.B - (int)(CurrentColor.B * (0.3f + var1));
-                r = Math.Abs(r % 255);
-                g = Math.Abs(g % 255);
-                b = Math.Abs(b % 255);
+                r = CurrentColor.R - (int)(CurrentColor.R * (0.3f + var1));
+                g = CurrentColor.G - (int)(CurrentColor.G * (0.3f + var1));
+                b = CurrentColor.B - (int)(CurrentColor.B * (0.3f + var1));
+                r = Math.Abs(r % 256);
+                g = Math.Abs(g % 256);
+                b = Math.Abs(b % 256);
                 StateManager.FillGradientRoundRect(Location, Size, CurrentColor, Color.FromArgb(r,g,b), 90, 10);
                 StateManager.SetColor(FontColor);
                 StateManager.SetFont(FontUtils.DEFAULT_FONT);

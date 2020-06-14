@@ -18,6 +18,7 @@ namespace FragenGerangel.Gui.Screens
         private FragenGerangel fragenGerangel;
         private Player[] gameRequests, friendRequests;
         private Game[] games;
+        private bool update;
 
         public GuiMainScreen(FragenGerangel fragenGerangel) : base()
         {
@@ -26,6 +27,7 @@ namespace FragenGerangel.Gui.Screens
 
         public override void Init()
         {
+            update = true;
             Components.Add(new GuiButton("Neues Spiel")
             {
                 Location = new Vector(-100, 155),
@@ -163,56 +165,66 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
+        public override void Close()
+        {
+            update = false;
+            base.Close();
+        }
+
         private void SearchForUpdates()
         {
             new Thread(() =>
             {
-                while (true)
+                int time = 0;
+                while (update)
                 {
-                    //Gamerequests
-                    Task<Player[]> gameRequests = Globals.APIManager.GetDuelRequests();
-                    gameRequests.Wait();
-                    if (gameRequests.Result.Length != this.gameRequests.Length)
+                    Thread.Sleep(1000);
+                    time++;
+                    if (time > 60)
                     {
-                        fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
-                        return;
-                    }
-                    for (int i = 0; i < this.gameRequests.Length; i++)
-                        if (this.gameRequests[i].Name != gameRequests.Result[i].Name)
+                        time = 0;
+                        //Gamerequests
+                        Task<Player[]> gameRequests = Globals.APIManager.GetDuelRequests();
+                        gameRequests.Wait();
+                        if (gameRequests.Result.Length != this.gameRequests.Length)
                         {
                             fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
                             return;
                         }
-                    //Friends
-                    Task<Player[]> friendRequests = Globals.APIManager.GetFriendRequests();
-                    friendRequests.Wait();
-                    if (friendRequests.Result.Length != this.friendRequests.Length)
-                    {
-                        fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
-                        return;
-                    }
-                    for (int i = 0; i < this.friendRequests.Length; i++)
-                        if (this.friendRequests[i].Name != friendRequests.Result[i].Name)
+                        for (int i = 0; i < this.gameRequests.Length; i++)
+                            if (this.gameRequests[i].Name != gameRequests.Result[i].Name)
+                            {
+                                fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                                return;
+                            }
+                        //Friends
+                        Task<Player[]> friendRequests = Globals.APIManager.GetFriendRequests();
+                        friendRequests.Wait();
+                        if (friendRequests.Result.Length != this.friendRequests.Length)
                         {
                             fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
                             return;
                         }
-                    //Games
-                    Task<Game[]> activeGames = Globals.APIManager.GetGames();
-                    if(activeGames.Result.Length != this.games.Length)
-                    {
-                        fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
-                        return;
-                    }
-                    for(int i = 0; i < this.games.Length; i++)
-                        if(!this.games[i].Equals(activeGames.Result[i]))
+                        for (int i = 0; i < this.friendRequests.Length; i++)
+                            if (this.friendRequests[i].Name != friendRequests.Result[i].Name)
+                            {
+                                fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                                return;
+                            }
+                        //Games
+                        Task<Game[]> activeGames = Globals.APIManager.GetGames();
+                        if (activeGames.Result.Length != this.games.Length)
                         {
                             fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
                             return;
                         }
-                    Thread.Sleep(5000);
-                    if (!Opend)
-                        break;
+                        for (int i = 0; i < this.games.Length; i++)
+                            if (!this.games[i].Equals(activeGames.Result[i]))
+                            {
+                                fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                                return;
+                            }
+                    }
                 }
             }).Start();
         }
