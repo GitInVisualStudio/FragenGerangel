@@ -116,6 +116,8 @@ namespace FragenGerangel.Gui
             r = Math.Abs(r % 256);
             g = Math.Abs(g % 256);
             b = Math.Abs(b % 256);
+            StateManager.SetColor(0, 0, 0, 50);
+            StateManager.FillRoundRect(Location, Size + new Vector(4, 4), 15);
             StateManager.SetColor(r, g, b);
             StateManager.FillRoundRect(Location, Size, 15);
             StateManager.SetColor(100, 0, 200, 150);

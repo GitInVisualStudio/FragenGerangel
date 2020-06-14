@@ -176,6 +176,20 @@ namespace FragenGerangel.Gui.Screens
             StateManager.DrawCenteredString(category, Size.X / 2, height + 20);
             StateManager.FillGradientRect(Location, new Vector(Size.X, height), c1, c2);
 
+            StateManager.Push();
+            StateManager.Translate(Size.X / 2, height / 2);
+            StateManager.Rotate(45);
+            width = 70;
+            StateManager.FillRoundRect(width / -2, width / -2, width, width, 15);
+            StateManager.Rotate(-45);
+            StateManager.SetColor(c1);
+            StateManager.SetFont(new Font("Arial", 30, FontStyle.Bold));
+            StateManager.DrawCenteredString(game.Rounds.ToList().IndexOf(game.LastRound).ToString(), 0, 0);
+            StateManager.Pop();
+            StateManager.SetColor(c1.R, c1.G, c1.B, 100);
+            StateManager.FillCircle(Size.X - 150, height / 2, 70);
+            RenderUtils.DrawPlayer(game.RemotePlayer.Name, new Vector(Size.X - 150, height / 2), 60);
+
             if (renderEnemyAnswer)
             {
                 if(QuestionAnswer.AnswerRemotePlayer != -1)
@@ -183,6 +197,7 @@ namespace FragenGerangel.Gui.Screens
                     GuiButton button = GetComponent<GuiButton>(original[QuestionAnswer.AnswerRemotePlayer]);
                     RenderUtils.DrawPlayer(game.RemotePlayer.Name, new Vector(button.Location.X + button.Size.X / 3, button.Location.Y), 35, false);
                     StateManager.SetColor(Color.White);
+                    StateManager.SetFont(FontUtils.DEFAULT_FONT);
                     StateManager.DrawCenteredString(game.RemotePlayer.Name, button.Location.X + button.Size.X / 3, button.Location.Y + 25);
                 }
             }

@@ -19,6 +19,9 @@ namespace FragenGerangel.Gui.Screens
         private Player[] gameRequests, friendRequests;
         private Game[] games;
         private bool update;
+        private int scroll;
+        private float scrollDelta;
+        private bool shouldScroll;
 
         public GuiMainScreen(FragenGerangel fragenGerangel) : base()
         {
@@ -28,7 +31,7 @@ namespace FragenGerangel.Gui.Screens
         public override void Init()
         {
             update = true;
-            Components.Add(new GuiButton("Neues Spiel")
+            Components.Add(new GuiButton("Suche")
             {
                 Location = new Vector(-100, 155),
                 RX = 0.5f,
@@ -36,7 +39,7 @@ namespace FragenGerangel.Gui.Screens
                 BackColor = Color.LawnGreen,
                 FontColor = Color.White
             });
-            GetComponent<GuiButton>("Neues Spiel").OnClick += OnClick_NewGame;
+            GetComponent<GuiButton>("Suche").OnClick += OnClick_NewGame;
             Update().Wait();
             base.Init();
 
@@ -66,10 +69,13 @@ namespace FragenGerangel.Gui.Screens
                 };
                 info.InfoClick += ActiveGameClick;
                 if (!g.Active)
+                {
                     gamesClosed.Add(info);
+                }
                 else
                     games.Add(info);
             }
+
             gamesClosed.Init();
             games.Init();
 
@@ -127,6 +133,17 @@ namespace FragenGerangel.Gui.Screens
             if (gamesClosed.Components.Count > 0)
                 Components.Add(gamesClosed);
             SearchForUpdates();
+        }
+
+        public override void OnSroll(int direction)
+        {
+            base.OnSroll(direction);
+            if(shouldScroll && direction > 0)
+                scroll += direction;
+            else if(direction < 0)
+                scroll += direction;
+            if (scroll < 0)
+                scroll = 0;
         }
 
         private void HandleGameRequest(object sender, bool e)
@@ -267,19 +284,47 @@ namespace FragenGerangel.Gui.Screens
 
         protected override void Panel_OnClick(object sender, Vector e)
         {
-            base.Panel_OnClick(sender, e);
             if(e.Y > 50 && e.Y < 150)
             {
                 fragenGerangel.OpenScreen(new GuiStats(fragenGerangel, Globals.Player));
             }
+            e = new Vector(e.X, e.Y + scrollDelta);
+            base.Panel_OnClick(sender, e);
+        }
+
+        protected override void Panel_OnMove(object sender, Vector e)
+        {
+            e = new Vector(e.X, e.Y + scrollDelta);
+            base.Panel_OnMove(sender, e);
         }
 
         public override void OnRender()
         {
             //base.OnRender();
+
+            StateManager.Push();
+            scrollDelta += (scroll - scrollDelta) * StateManager.delta * 10;
+            StateManager.Translate(0, -scrollDelta);
+            int offset = 200;
+            shouldScroll = false;
+            foreach (GuiComponent component in Components)
+            {
+                if (component is GuiButton)
+                {
+                    component.OnRender();
+                    continue;
+                }
+                component.Location = new Vector(component.Location.X, offset);
+                component.OnRender();
+                offset += (int)component.Size.Y + 30;
+                if (offset - scroll > Size.Y)
+                    shouldScroll = true;
+            }
+            StateManager.Pop();
+
             Color c1 = Color.FromArgb(255, 2, 175, 230);
             Color c2 = Color.FromArgb(255, 84, 105, 230);
-            int offset = 50;
+            offset = 50;
             StateManager.FillGradientRect(Location, new Vector(Size.X, offset), c1, c2);
             StateManager.SetColor(Color.White);
             StateManager.SetFont(new Font("comfortaa", 20));
@@ -297,19 +342,6 @@ namespace FragenGerangel.Gui.Screens
             StateManager.SetFont(new Font("Arial", 10));
             StateManager.DrawString("Deine Statistiken >", 100, offset * 1.5f + height);
             StateManager.FillRect(100 - 5, offset * 1.5f, 2, height * 2);
-
-            offset = 200;
-            foreach(GuiComponent component in Components)
-            {
-                if (component is GuiButton)
-                {
-                    component.OnRender();
-                    continue;
-                }
-                component.Location = new Vector(component.Location.X, offset);
-                component.OnRender();
-                offset += (int)component.Size.Y + 30;
-            }
         }
     }
 }

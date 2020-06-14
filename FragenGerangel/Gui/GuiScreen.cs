@@ -15,6 +15,11 @@ namespace FragenGerangel.Gui
         public event EventHandler OnClose;
         private bool start = true;
 
+        public virtual void OnSroll(int direction)
+        {
+
+        }
+
         public bool Opend
         {
             get

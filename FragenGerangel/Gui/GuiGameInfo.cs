@@ -43,12 +43,14 @@ namespace FragenGerangel.Gui
 
         public override void OnRender()
         {
-            //var1 += (var2 - var1) * StateManager.delta * 10;
-            //int r = CurrentColor.R - (int)(CurrentColor.R * (var1));
-            //int g = CurrentColor.G - (int)(CurrentColor.G * (var1));
-            //int b = CurrentColor.B - (int)(CurrentColor.B * (var1));
+            var1 += (var2 - var1) * StateManager.delta * 10;
+            int r = CurrentColor.R - (int)(CurrentColor.R * (var1));
+            int g = CurrentColor.G - (int)(CurrentColor.G * (var1));
+            int b = CurrentColor.B - (int)(CurrentColor.B * (var1));
             StateManager.SetFont(new Font("Arial", 12, FontStyle.Bold));
-            StateManager.SetColor(CurrentColor);
+            StateManager.SetColor(0, 0, 0, 50);
+            StateManager.FillRoundRect(Location, Size + new Vector(4, 4), 15);
+            StateManager.SetColor(r, g, b);
             StateManager.FillRoundRect(Location, Size, 15);
             StateManager.SetColor(100, 0, 200, 150);
             StateManager.FillCircle(Location.X + 40, Location.Y + Size.Y / 2, 65);

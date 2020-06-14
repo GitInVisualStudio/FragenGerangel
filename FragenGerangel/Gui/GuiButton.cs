@@ -128,6 +128,8 @@ namespace FragenGerangel.Gui
                 r = Math.Abs(r % 256);
                 g = Math.Abs(g % 256);
                 b = Math.Abs(b % 256);
+                StateManager.SetColor(0, 0, 0, 50);
+                StateManager.FillRoundRect(Location, Size + new Vector(2, 2), 10);
                 StateManager.FillGradientRoundRect(Location, Size, CurrentColor, Color.FromArgb(r,g,b), 90, 10);
                 StateManager.SetColor(FontColor);
                 StateManager.SetFont(FontUtils.DEFAULT_FONT);

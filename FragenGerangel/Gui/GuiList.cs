@@ -129,6 +129,7 @@ namespace FragenGerangel.Gui
             OnKeyPress += Panel_OnKeyPress;
             OnKeyRelease += Panel_OnKeyRelease;
             OnLeave += GuiList_OnLeave;
+            OnEnter += GuiList_OnEnter;
             SetLocationAndSize(this, Size);
 
             components.ForEach(x =>
@@ -136,6 +137,16 @@ namespace FragenGerangel.Gui
                 x.Init();
                 x.SetLocationAndSize(this, Size);
             });
+        }
+
+        private void GuiList_OnEnter(object sender, Vector e)
+        {
+            for (int i = components.Count - 1; i >= 0; i--)
+            {
+                GuiComponent x = components[i];
+                if(x.OnHover(e))
+                    x.Component_OnEnter(e);
+            }
         }
 
         private void GuiList_OnLeave(object sender, Vector e)
@@ -167,6 +178,8 @@ namespace FragenGerangel.Gui
                 t.OnRender();
                 offset += (int)t.Size.Y + 10;
             }
+            if (offset + 30 > Size.Y)
+                Size = new Vector(Size.X, offset + 30);
         }
     }
 }

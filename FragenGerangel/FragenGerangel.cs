@@ -65,7 +65,7 @@ namespace FragenGerangel
 
         private string[] GetAccount()
         {
-            return null;
+            //return null;
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
             if (!File.Exists(path))
                 return null;
@@ -111,6 +111,10 @@ namespace FragenGerangel
                     return;
                 Vector location = new Vector(e.X, e.Y);
                 currentScreen?.Component_OnMove(location);
+            };
+            MouseWheel += (object sender, MouseEventArgs e) =>
+            {
+                currentScreen?.OnSroll(-e.Delta);
             };
             Resize += (object sender, EventArgs args) =>
             {
