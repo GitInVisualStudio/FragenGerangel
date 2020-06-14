@@ -63,6 +63,7 @@ namespace FragenGerangel
 
         private string[] GetAccount()
         {
+            //return null;
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
             if (!File.Exists(path))
                 return null;
@@ -78,24 +79,34 @@ namespace FragenGerangel
         {
             MouseDown += (object sender, MouseEventArgs e) =>
             {
+                if (loadingScreen != null)
+                    return;
                 Vector location = new Vector(e.X, e.Y);
                 currentScreen?.Component_OnClick(location);
             };
             MouseUp += (object sender, MouseEventArgs e) =>
             {
+                if (loadingScreen != null)
+                    return;
                 Vector location = new Vector(e.X, e.Y);
                 currentScreen?.Component_OnRelease(location);
             };
-            KeyDown += (object sender, KeyEventArgs args) =>
+            KeyPress += (object sender, KeyPressEventArgs args) =>
             {
-                currentScreen?.Component_OnKeyPress((char)args.KeyValue);
+                if (loadingScreen != null)
+                    return;
+                currentScreen?.Component_OnKeyPress(args.KeyChar);
             };
             KeyUp += (object sender, KeyEventArgs args) =>
             {
+                if (loadingScreen != null)
+                    return;
                 currentScreen?.Component_OnKeyRelease((char)args.KeyValue);
             };
             MouseMove += (object sender, MouseEventArgs e) =>
             {
+                if (loadingScreen != null)
+                    return;
                 Vector location = new Vector(e.X, e.Y);
                 currentScreen?.Component_OnMove(location);
             };
@@ -118,6 +129,7 @@ namespace FragenGerangel
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             base.OnFormClosed(e);
+            currentScreen.Opend = false;
             loadingScreen = null;
         }
 
@@ -129,8 +141,11 @@ namespace FragenGerangel
             StateManager.SetFont(FontUtils.DEFAULT_FONT);
             #region drawing
             currentScreen?.OnRender();
-            if(loadingScreen.Opend)
-                loadingScreen?.OnRender();
+            if(loadingScreen != null)
+                if (loadingScreen.Opend)
+                    loadingScreen?.OnRender();
+                else
+                    loadingScreen = null;
             #endregion stopDrawing
             AnimationManager.Update();
             StateManager.Pop();

@@ -34,7 +34,7 @@ namespace FragenGerangel.Gui.Screens
                 Location = new Vector(-150, -110),
                 FontColor = Color.White
             });
-            Components.Add(new GuiTextBox("Passwort")
+            Components.Add(new GuiPasswordBox("Passwort")
             {
                 RX = 0.5f,
                 RY = 0.5f,

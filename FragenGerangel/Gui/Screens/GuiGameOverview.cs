@@ -1,4 +1,5 @@
 ﻿using FragenGerangel.GameBase;
+using FragenGerangel.Utils;
 using FragenGerangel.Utils.Math;
 using FragenGerangel.Utils.Render;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
@@ -13,11 +15,63 @@ namespace FragenGerangel.Gui.Screens
     public class GuiGameOverview : GuiScreen
     {
         private Game game;
+        private FragenGerangel fragenGerangel;
+        private GuiRound round;
+        private int index;
 
-        public GuiGameOverview(Game game) : base()
+        public GuiGameOverview(FragenGerangel fragenGerangel, Game game) : base()
         {
             this.game = game;
-            Components.Add(new GuiButton("SPIELEN")
+            this.fragenGerangel = fragenGerangel;
+        }
+
+        protected override void Panel_OnKeyRelease(object sender, char e)
+        {
+            if (e == 27)
+                fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+
+            base.Panel_OnKeyRelease(sender, e);
+        }
+
+        private void Round_OnClose(object sender, int e)
+        {
+            game.LastRound.Questions[index].AnswerPlayer = e;
+            index++;
+            if (index < 3)
+            {
+                round = new GuiRound(game.LastRound.Questions[index]);
+                round.OnRoundClose += Round_OnClose;
+                fragenGerangel.OpenScreen(round);
+            }
+            else
+            {
+                GuiRound round = (GuiRound)sender;
+                new Thread(() =>
+                {
+                    Globals.APIManager.GetGame(game).Wait();
+                    fragenGerangel.OpenScreen(new GuiGameOverview(fragenGerangel, game));
+                }).Start();
+            }
+        }
+
+        public override void Init()
+        {
+            //Globals.APIManager.GetGame(game).Wait();
+            if (!game.Active)
+            {
+                Components.Add(new GuiButton("Zurück")
+                {
+                    Size = new Vector(200, 100),
+                    Location = new Vector(-100, -150),
+                    RX = 0.5f,
+                    RY = 1,
+                    FontColor = Color.White
+                });
+                animation.Speed = 0.6f;
+                base.Init();
+                return;
+            }
+            Components.Add(new GuiButton(IsRemoteTurn() ? "Zurück" : "SPIELEN")
             {
                 Size = new Vector(200, 100),
                 Location = new Vector(-100, -150),
@@ -25,11 +79,38 @@ namespace FragenGerangel.Gui.Screens
                 RY = 1,
                 FontColor = Color.White
             });
+            GetComponent<GuiButton>(IsRemoteTurn() ? "Zurück" : "SPIELEN").OnClick += (object sender, Vector e) =>
+            {
+                if (IsRemoteTurn())
+                {
+                    fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                    return;
+                }
+                if (game.LastRound.Category == null)
+                {
+                    GuiCategory category = new GuiCategory(game);
+                    category.OnClose += (object s, EventArgs args) =>
+                    {
+                        new Thread(() =>
+                        {
+                            if (game.LastRound.Category != null)
+                                return;
+                            Globals.APIManager.ChooseCategory(game, category.Category + 1).Wait();
+                            Task task = Globals.APIManager.GetGame(game);
+                            task.Wait();
+                            round = new GuiRound(game.LastRound.Questions[0]);
+                            round.OnRoundClose += Round_OnClose;
+                            fragenGerangel.OpenScreen(round);
+                        }).Start();
+                    };
+                    fragenGerangel.OpenScreen(category);
+                    return;
+                }
+                round = new GuiRound(game.LastRound.Questions[0]);
+                round.OnRoundClose += Round_OnClose;
+                fragenGerangel.OpenScreen(round);
+            };
             animation.Speed = 0.6f;
-        }
-
-        public override void Init()
-        {
             base.Init();
         }
 
@@ -53,7 +134,7 @@ namespace FragenGerangel.Gui.Screens
             StateManager.FillGradientRect(new Vector(0, offset), new Vector(Size.X, offset * 2), c1, c2);
 
             StateManager.SetFont(new Font("comfortaa", 40));
-            string score = "0 - 0";
+            string score = game.ScorePlayer + " - " + game.ScoreRemotePlayer;
             StateManager.DrawCenteredString(score, Size.X / 2, offset * 2 + offset / 2);
 
             float width = StateManager.GetStringWidth(score);
@@ -61,9 +142,19 @@ namespace FragenGerangel.Gui.Screens
             StateManager.SetColor(Color.White);
             float var1 = Size.X / 2 - width;
             float var2 = Size.X / 2 + width;
-            RenderUtils.DrawPlayer("player1", new Vector(var1 / 2 + 50, offset * 3), 100);
-            RenderUtils.DrawPlayer("player2", new Vector(var2 + var1 / 2 - 50, offset * 3), 100);
+            RenderUtils.DrawPlayer(Globals.Player.Name, new Vector(var1 / 2 + 50, offset * 3), 100);
+            RenderUtils.DrawPlayer(game.RemotePlayer.Name, new Vector(var2 + var1 / 2 - 50, offset * 3), 100);
             RenderTable();
+        }
+
+        private bool IsRemoteTurn()
+        {
+            if (game.LastRound.Category == null)
+                return false;
+            foreach (QuestionAnswer q in game.LastRound.Questions)
+                if (q.AnswerPlayer == -1)
+                    return false;
+            return true;
         }
 
         private void RenderTable()
@@ -100,19 +191,28 @@ namespace FragenGerangel.Gui.Screens
                 StateManager.Pop();
                 StateManager.Push();
                 StateManager.Translate(0, offset);
+                bool var1 = true;
                 if(flag)
-                    flag = RenderRound(new Round(-1, "asdasd", "asdasd", "asdawsd"));
+                    var1 = RenderRound(game.Rounds[i]);
                 StateManager.Pop();
 
                 Vector size = StateManager.GetStringSize(i.ToString());
                 StateManager.SetColor(Color.White);
                 StateManager.DrawString(i.ToString(), Size.X / 2 - size.X / 2 + 1, offset - size.Y / 2 + 1);
+                if (flag)
+                {
+                    StateManager.SetColor(Color.Black);
+                    StateManager.DrawCenteredString(game.Rounds[i].Category, Size.X / 2 , offset + 23);
+                }
                 offset += 50;
+                if(flag)
+                    flag = var1;
             }
         }
 
         private bool RenderRound(Round round)
         {
+            bool flag = true;
             if(round.Questions == null)
             {
                 Vector size = StateManager.GetStringSize("DU BIST DRAN");
@@ -122,28 +222,50 @@ namespace FragenGerangel.Gui.Screens
                 StateManager.DrawCenteredString("DU BIST DRAN", Size.X / 4, 25);
                 return false;
             }
-
+            float offset = 0;
             for(int i = 0; i < round.Questions.Length; i++)
             {
                 QuestionAnswer question = round.Questions[i];
                 if (question.AnswerPlayer == -1)
                 {
                     Vector size = StateManager.GetStringSize("DU BIST DRAN");
-                    StateManager.FillRoundRect(Size.X / 4 - size.X / 2, 0, size.X, size.Y);
-                    StateManager.DrawCenteredString("DU BIST DRAN", Size.X / 4, 0);
-                    return false;
+                    StateManager.SetColor(Color.DarkOrange);
+                    StateManager.FillRoundRect(Size.X / 4 - size.X / 2, 25 / 2f, size.X, size.Y);
+                    StateManager.SetColor(Color.White);
+                    StateManager.DrawCenteredString("DU BIST DRAN", Size.X / 4, 25);
+                    flag = false;
+                    break;
                 }
+                bool right = question.AnswerPlayer == 0;
+                StateManager.SetColor(right ? Color.LawnGreen : Color.Red);
+                float width = 25;
+                StateManager.FillRoundRect(Size.X / 4 - width * 2 + offset, width / 2, width, width);
+                offset += width;
             }
+            offset = 0;
             for (int i = 0; i < round.Questions.Length; i++)
             {
                 QuestionAnswer question = round.Questions[i];
                 if (question.AnswerRemotePlayer == -1)
                 {
-                    StateManager.DrawCenteredString("Warte", Size.X / 4 * 3, 0);
+                    if (!flag)
+                        return false;
+                    Vector size = StateManager.GetStringSize("Warte auf " + game.RemotePlayer.Name);
+                    StateManager.SetColor(Color.DarkOrange);
+                    StateManager.FillRoundRect(Size.X / 4 * 3- size.X / 2, 25 / 2f, size.X, size.Y);
+                    StateManager.SetColor(Color.White);
+                    StateManager.DrawCenteredString("Warte auf " + game.RemotePlayer.Name, Size.X / 4 * 3, 25);
                     return false;
                 }
+                if (question.AnswerPlayer == -1)
+                    return false;
+                bool right = question.AnswerRemotePlayer == 0;
+                StateManager.SetColor(right ? Color.LawnGreen : Color.Red);
+                float width = 25;
+                StateManager.FillRoundRect(Size.X / 4 * 3 - width + offset, width / 2, width, width);
+                offset += width;
             }
-            return true;
+            return flag;
         }
     }
 }

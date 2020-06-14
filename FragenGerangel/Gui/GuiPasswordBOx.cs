@@ -7,36 +7,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace FragenGerangel.Gui
 {
-    public class GuiTextBox : GuiComponent
+    public class GuiPasswordBox : GuiTextBox
     {
-        protected Animation animation;
-        protected float time;
-        protected string text = "";
-        protected string token;
-
-        public string Text { get => text; set => text = value; }
-
-        public GuiTextBox(string name)
+        public GuiPasswordBox(string name) : base(name)
         {
-            this.Name = name;
-            OnKeyPress += GuiTextBox_OnKeyPress;
-            animation = new Animation(3);
-            animation.Fire();
-        }
-
-        protected virtual void GuiTextBox_OnKeyPress(object sender, char e)
-        {
-            if (e != 8)
-            {
-                if (char.IsLetterOrDigit(e) && e < 122)
-                    text += e;
-            }
-            else if (text.Length >= 1)
-                text = text.Substring(0, text.Length - 1);
         }
 
         public override void OnRender()
@@ -45,15 +22,9 @@ namespace FragenGerangel.Gui
                 animation.Reverse();
             if (animation.Finished && !Selected && !animation.Incremental && text.Length == 0)
                 animation.Reverse();
-            time += StateManager.delta;
-            if (Selected && time >= 0.5)
-            {
-                time = 0;
-                token = token == "_" ? " " : "_";
-            }
-            else if (!Selected)
-                token = "";
-            string renderString = text + token;
+            string renderString = "";
+            foreach (char c in text)
+                renderString += "*";
             Color c1 = Color.FromArgb(255, 2, 175, 230);
             Color c2 = Color.FromArgb(255, 84, 105, 230);
             StateManager.SetColor(Color.White);
@@ -66,7 +37,7 @@ namespace FragenGerangel.Gui
             StateManager.SetColor(Color.Gray);
             StateManager.DrawString(Name, var1.X + 5, var1.Y);
             StateManager.SetColor(Color.Black);
-            font = new Font("Arial", 12, FontStyle.Bold);
+            font = new Font("Arial", 15);
             StateManager.SetFont(font);
             StateManager.DrawString(renderString, Location.X + 5, Location.Y + Size.Y / 2);
         }

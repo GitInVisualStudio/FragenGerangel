@@ -66,7 +66,11 @@
     <Compile Include="Gui\GuiButton.cs" />
     <Compile Include="Gui\GuiCheckBox.cs" />
     <Compile Include="Gui\GuiComponent.cs" />
+    <Compile Include="Gui\GuiGameInfo.cs" />
+    <Compile Include="Gui\GuiList.cs" />
     <Compile Include="Gui\GuiPanel.cs" />
+    <Compile Include="Gui\GuiPasswordBox.cs" />
+    <Compile Include="Gui\GuiPlayerInfo.cs" />
     <Compile Include="Gui\GuiQuestionBox.cs" />
     <Compile Include="Gui\GuiScreen.cs" />
     <Compile Include="Gui\GuiSearch.cs" />

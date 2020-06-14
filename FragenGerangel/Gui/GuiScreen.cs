@@ -10,9 +10,10 @@ namespace FragenGerangel.Gui
 {
     public class GuiScreen : GuiPanel
     {
-        private bool opend;
+        private bool opend = true;
         protected Animation animation = new Animation();
-        private event EventHandler OnClose;
+        public event EventHandler OnClose;
+        private bool start = true;
 
         public bool Opend
         {
@@ -38,8 +39,6 @@ namespace FragenGerangel.Gui
         private void Animation_OnFinish(object sender, bool e)
         {
             opend = animation.Incremental;
-            if (!opend)
-                OnClose?.Invoke(this, null);
         }
 
         public virtual void Open()
@@ -50,7 +49,8 @@ namespace FragenGerangel.Gui
 
         public virtual void Close()
         {
-            animation.Reverse();            
+            animation.Reverse();
+            OnClose?.Invoke(this, null);
         }
     }
 }

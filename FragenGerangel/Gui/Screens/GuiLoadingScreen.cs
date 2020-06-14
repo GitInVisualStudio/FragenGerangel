@@ -50,7 +50,7 @@ namespace FragenGerangel.Gui.Screens
                 flag = false;
                 new Thread(() =>
                 {
-                    while (Globals.APIManager == null && current != null)
+                    while (Globals.APIManager == null && current == null)
                         Thread.Sleep(100);
                     next.SetLocationAndSize(this, Size);
                     next.Init();

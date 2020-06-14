@@ -14,6 +14,7 @@ namespace FragenGerangel.GameBase
         private Round[] rounds;
         private int onlineID;
         private float? eloChange;
+        private bool active;
 
         public Player RemotePlayer
         {
@@ -41,17 +42,30 @@ namespace FragenGerangel.GameBase
             }
         }
 
-        public int LastRound
+        public Round LastRound
         {
             get
             {
                 if (rounds[0] == null)
-                    return 0;
+                    return null;
                 for (int i = 0; i < rounds.Length; i++)
                     if (rounds[i] == null)
-                        return i - 1;
-                return rounds.Length;
+                        return rounds[i - 1];
+                return rounds[rounds.Length - 1];
             }
+        }
+
+        public bool Active
+        {
+            get
+            {
+                if (rounds[0] == null)
+                    return active;
+                if (LastRound == null || LastRound.Questions == null || LastRound.Questions.ToList().Find(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) == null)
+                    return true;
+                return false;
+            }
+            set => active = value;
         }
 
         public int ScorePlayer
@@ -94,6 +108,26 @@ namespace FragenGerangel.GameBase
             this.remotePlayer = remote;
             this.onlineID = onlineID;
             this.rounds = new Round[6];
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Game)
+            {
+                Game game = (Game)obj;
+                for (int i = 0; i < rounds.Length; i++)
+                {
+                    if (rounds[i] == null && game.Rounds[i] != null)
+                        return false;
+                    if (rounds[i] != null && game.Rounds[i] == null)
+                        return false;
+                    if(rounds[i] != null)
+                        if (!rounds[i].Equals(game.Rounds[i]))
+                            return false;
+                }
+                return game.RemotePlayer.Name == RemotePlayer.Name;
+            }
+            return base.Equals(obj);
         }
     }
 }

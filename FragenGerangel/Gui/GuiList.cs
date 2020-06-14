@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui
 {
-    public class GuiPanel : GuiComponent
+    public class GuiList<T> : GuiComponent where T : GuiComponent
     {
-        private List<GuiComponent> components;
+        private List<T> components;
 
-        public List<GuiComponent> Components
+        public List<T> Components
         {
             get
             {
@@ -26,9 +26,20 @@ namespace FragenGerangel.Gui
             }
         }
 
-        public GuiPanel() : base()
+        public GuiList(string name, List<T> components = null) : base()
         {
-            components = new List<GuiComponent>();
+            Name = name;
+            if (components != null)
+                Components = components;
+            else
+                Components = new List<T>();
+        }
+
+        public void Add(T t)
+        {
+            t.Location = new Vector(Location.X, Location.Y + Size.Y + 30);
+            Components.Add(t);
+            Size = new Vector(Size.X, Size.Y + t.Size.Y + 10);
         }
 
         protected virtual void Panel_OnResize(object sender, Vector e)
@@ -89,7 +100,7 @@ namespace FragenGerangel.Gui
             for (int i = components.Count - 1; i >= 0; i--)
             {
                 GuiComponent x = components[i];
-                if(e == 9 && x.Selected)
+                if (e == 9 && x.Selected)
                 {
                     flag = true;
                     x.Selected = false;
@@ -126,15 +137,18 @@ namespace FragenGerangel.Gui
             });
         }
 
-        protected T GetComponent<T>(string name) where T : GuiComponent
+        protected T GetComponent(string name)
         {
-            return (T)components.Find(x => x.Name == name);
+            return components.Find(x => x.Name == name);
         }
 
         public override void OnRender()
         {
-            if (Size.X < 1 || Size.Y < 1)
-                return;
+            StateManager.SetFont(new Font("Arial", 15, FontStyle.Bold));
+            float height = StateManager.GetStringHeight(Name);
+            StateManager.SetColor(Color.Black);
+            StateManager.FillRect(Location.X - 5 + 20, Location.Y, 2, height);
+            StateManager.DrawString(Name, Location.X  + 20, Location.Y);
             components.ForEach(x => x.OnRender());
         }
     }
