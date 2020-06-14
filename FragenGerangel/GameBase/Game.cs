@@ -113,7 +113,7 @@ namespace FragenGerangel.GameBase
             {
                 if (rounds[0] == null)
                     return active;
-                if (rounds[LastRound] == null || rounds[LastRound].Questions == null || rounds[LastRound].Questions.ToList().Find(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) == null)
+                if (rounds[LastRound] == null || rounds[LastRound].Questions == null || rounds[LastRound].Questions.ToList().Find(x => x.AnswerPlayer == -1 || x.AnswerRemotePlayer == -1) != null)
                     return true;
                 return false;
             }
