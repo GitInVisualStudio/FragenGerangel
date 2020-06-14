@@ -115,8 +115,12 @@ class Globals
 			
 		$categories = [];
 		for ($i = 0; $i < 3; $i++){
-			$index = random_int(0, sizeof($all_categories) - 1);
-			$categories[$i] = Globals::arrayPop($all_categories, $index);
+			do {
+				$index = random_int(0, sizeof($all_categories) - 1);
+				$category = $all_categories[$index];
+			}
+			while (in_array($category, $categories));
+			$categories[$i] = $category;
 		}
 		$data = [];
 		$data[] = ["game" => $game_id, "order" => $order, "cat_1" => $categories[0], "cat_2" => $categories[1], "cat_3" => $categories[2]];
