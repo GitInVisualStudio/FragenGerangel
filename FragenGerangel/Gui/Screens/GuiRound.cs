@@ -248,7 +248,8 @@ namespace FragenGerangel.Gui.Screens
                 time = 10;
             }
             StateManager.SetColor(46, 143, 234);
-            StateManager.FillRoundRect(50, Size.Y / 2 - 50, (Size.X - 17 - 100) * (time / 10.0f), 20);
+            if(!Answered)
+                StateManager.FillRoundRect(50, Size.Y / 2 - 50, (Size.X - 17 - 100) * (time / 10.0f), 20);
 
             //zeichnen der antwort des gegners wenn spieler geantwortet hat
             if (renderEnemyAnswer)
