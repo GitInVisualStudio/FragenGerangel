@@ -68,7 +68,7 @@ namespace FragenGerangel.Utils.API
             if (uri != "getAuthToken.php" && uri != "createUser.php" && DateTime.Now - authSince >= new TimeSpan(24, 0, 0))
                 Init().Wait();
             string resultStr = await Post(uri, json).ConfigureAwait(false);
-            Console.WriteLine(resultStr);
+            //Console.WriteLine(resultStr);
             JObject resultJson = JObject.Parse(resultStr);
             if (resultJson["result"].ToString() != "ok")
                 throw APIExceptionManager.FromID(resultJson["error_code"].ToObject<int>());
@@ -185,7 +185,7 @@ namespace FragenGerangel.Utils.API
         /// <summary>
         /// Gibt alle Runden eines Spiels zurück, mit initialisierten Runden (außer sie wurden noch nicht initialisiert, in dem Fall sind sie null)
         /// </summary>
-        private async Task<Round[]> GetRounds(int gameID) 
+        private async Task<Round[]> GetRounds(int gameID)
         {
             JObject json = new JObject();
             json["auth"] = auth;
@@ -281,7 +281,7 @@ namespace FragenGerangel.Utils.API
             json["answer"] = qa.AnswerPlayer;
             JObject resultJson = await PostReturnJson("uploadQuestionAnswer.php", json).ConfigureAwait(false);
             return resultJson["deltaElo"]?.ToObject<float?>();
-        } 
+        }
 
         /// <summary>
         /// Befüllt ein Spiel mit initialisierten Runden
@@ -351,6 +351,21 @@ namespace FragenGerangel.Utils.API
             return p;
         }
 
+        public async Task DeclineFriendRequest(Player p)
+        {
+            JObject json = new JObject();
+            json["auth"] = auth;
+            json["username"] = p.Name;
+            await PostReturnJson("declineFriendRequest.php", json).ConfigureAwait(false);
+        }
+
+        public async Task DeclineDuelRequest(Player p)
+        {
+            JObject json = new JObject();
+            json["auth"] = auth;
+            json["username"] = p.Name;
+            await PostReturnJson("declineDuelRequest.php", json).ConfigureAwait(false);
+        }
 
         Game[] games; // DEBUG
         /// <summary>
@@ -364,8 +379,8 @@ namespace FragenGerangel.Utils.API
                 games = await GetGames().ConfigureAwait(false);
             await GetGame(games.Last()).ConfigureAwait(false);
             Game g = games.Last();
-            if (g.Rounds[g.LastRound].Questions != null)
-                foreach (QuestionAnswer q in g.Rounds[g.LastRound].Questions)
+            if (g.LastRound.Questions != null)
+                foreach (QuestionAnswer q in g.LastRound.Questions)
                 {
                     q.AnswerPlayer = new Random().Next(4);
                     float? eloChange = await UploadQuestionAnswer(q).ConfigureAwait(false);

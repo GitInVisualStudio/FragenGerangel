@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui
 {
+    /// <summary>
+    /// checkbox mit zwei zuständen ob sie ausgewählt wurde oder nicht
+    /// </summary>
     public class GuiCheckBox : GuiComponent
     {
         private bool enabled;
@@ -30,8 +33,9 @@ namespace FragenGerangel.Gui
             }
         }
 
-        //public bool Enabled { get => enabled; set => enabled = value; }
-
+        /// <summary>
+        /// erstellen der events und animationen
+        /// </summary>
         public GuiCheckBox()
         {
             token = Selected ? 10004 : 10007;
@@ -41,11 +45,19 @@ namespace FragenGerangel.Gui
             Size = new Vector(20, 20);
         }
 
+        /// <summary>
+        /// animation der box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GuiCheckBox_OnClick(object sender, Utils.Math.Vector e)
         {
             animation.Reverse();
         }
 
+        /// <summary>
+        /// Zeichnet die box
+        /// </summary>
         public override void OnRender()
         {
             StateManager.SetColor(Color.Black);
@@ -61,6 +73,7 @@ namespace FragenGerangel.Gui
             StateManager.Push();
             StateManager.Translate(Location + Size / 2);
             StateManager.Scale(animation.Delta);
+            //rotation des zeichens
             if(animation.Incremental)
                 StateManager.Rotate(animation.Delta * 360);
             else

@@ -7,16 +7,36 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Utils
 {
+    /// <summary>
+    /// eine animation welche sich dem wert 1 annähert
+    /// </summary>
     public class Animation
     {
         private float delta;
-        private float tolerance = 0.01f;
+        private float tolerance = 0.01f; //toleranz zum beenden der animation
         private float speed = 1.0f;
         private bool finished;
         private bool reverse;
-        public event EventHandler<bool> OnFinish;
-        public bool Incremental => !reverse;
+        public event EventHandler<bool> OnFinish; //wird aufgerufen wenn die animation zu ende ist
 
+        /// <summary>
+        /// ob die animation sich von 1 auf 0 annähert oder von 0 auf 1
+        /// </summary>
+        public bool Incremental
+        {
+            get
+            {
+                return !reverse;
+            }
+            set
+            {
+                reverse = !value;
+            }
+        }
+
+        /// <summary>
+        /// Ob die animation beendet ist
+        /// </summary>
         public bool Finished
         {
             get
@@ -30,6 +50,9 @@ namespace FragenGerangel.Utils
             }
         }
 
+        /// <summary>
+        /// geschwindigkeit
+        /// </summary>
         public float Speed
         {
             get
@@ -43,6 +66,9 @@ namespace FragenGerangel.Utils
             }
         }
 
+        /// <summary>
+        /// wie weit die animation ist 0 = anfagn 1 = ende
+        /// </summary>
         public float Delta
         {
             get
@@ -56,27 +82,35 @@ namespace FragenGerangel.Utils
             }
         }
 
-        //public float Delta { get => delta; set => delta = value; }
-        //public float Speed { get => speed; set => speed = value; }
-        //public bool Finished { get => finished; set => finished = value; }
-
+        /// <summary>
+        /// geschwindigkeit der animation
+        /// </summary>
+        /// <param name="speed"></param>
         public Animation(float speed = 1.0f)
         {
             Speed = speed;
             Reset();
         }
 
-        public void Reset()
+        /// <summary>
+        /// setzt die animation zurück
+        /// </summary>
+        public void Reset() 
         {
             Delta = 0;
             Finished = false;
         }
 
+        /// <summary>
+        /// startet die animation
+        /// </summary>
         public virtual void Fire()
         {
             AnimationManager.AddAnimation(this);
         }
-
+        /// <summary>
+        /// stoppt die animation
+        /// </summary>
         public virtual void Stop()
         {
             _OnFinish();
@@ -84,7 +118,10 @@ namespace FragenGerangel.Utils
             Delta = 1;
         }
 
-        private void _OnFinish()
+        /// <summary>
+        /// wird aufgerufen wenn die animation zu ende ist
+        /// </summary>
+        public void _OnFinish()
         {
             OnFinish?.Invoke(this, reverse);
             if(Incremental)
@@ -94,6 +131,9 @@ namespace FragenGerangel.Utils
             Finished = true;
         }
 
+        /// <summary>
+        /// dreht die richtig der animation um
+        /// </summary>
         public virtual void Reverse()
         {
             reverse = !reverse;
@@ -101,6 +141,9 @@ namespace FragenGerangel.Utils
             Fire();
         }
 
+        /// <summary>
+        /// nähert die beiden werte an
+        /// </summary>
         public virtual void Update()
         {
             if (reverse)

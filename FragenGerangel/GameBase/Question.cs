@@ -18,7 +18,7 @@ namespace FragenGerangel.GameBase
         {
             get
             {
-                return answers[0];
+                return Answers[0];
             }
         }
 
@@ -51,11 +51,13 @@ namespace FragenGerangel.GameBase
             }
         }
 
+        public string[] Answers { get => answers; set => answers = value; }
+
         public Question(string question, string category, string correct, string wrong1, string wrong2, string wrong3)
         {
             this.question = question;
             this.category = category;
-            this.answers = new string[] { correct, wrong1, wrong2, wrong3 };
+            this.Answers = new string[] { correct, wrong1, wrong2, wrong3 };
         }
     }
 }

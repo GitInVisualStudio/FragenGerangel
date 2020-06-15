@@ -141,3 +141,15 @@ input:
 	string query
 output
 	string[] usernames
+	
+declineFriendRequest.php
+input:
+	string username
+output:
+	void
+
+declineDuelRequest.php
+input:
+	string username
+output:
+	void

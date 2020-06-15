@@ -51,5 +51,30 @@ namespace FragenGerangel.GameBase
             this.onlineID = onlineID;
             this.possibleCategories = new string[] { category1, category2, category3 };
         }
+
+        public override bool Equals(object obj)
+        {
+
+            if (obj is Round)
+            {
+                Round r2 = (Round)obj;
+                if (r2 == null)
+                    return false;
+                if (Category != r2.Category)
+                    return false;
+                if(questions != null)
+                    for (int i = 0; i < questions.Length; i++)
+                    {
+                        QuestionAnswer q1 = questions[i];
+                        QuestionAnswer q2 = r2.questions[i];
+                        if (q1.OnlineID != q2.OnlineID)
+                            return false;
+                    }
+                if (questions == null && r2.questions != null)
+                    return false;
+                return true;
+            }
+            return base.Equals(obj);
+        }
     }
 }

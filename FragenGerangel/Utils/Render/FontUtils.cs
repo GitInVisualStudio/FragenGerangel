@@ -30,7 +30,7 @@ namespace FragenGerangel.Utils.Render
                     pfc.AddMemoryFont((IntPtr)pFontData, fontdata.Length);
                 }
             }
-            DEFAULT_FONT = new Font(pfc.Families[0].Name, 20, FontStyle.Bold, GraphicsUnit.Pixel);
+            DEFAULT_FONT = new Font(pfc.Families[0].Name, 15, FontStyle.Bold, GraphicsUnit.Pixel);
         }
     }
 }

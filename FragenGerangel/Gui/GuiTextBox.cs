@@ -7,18 +7,30 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FragenGerangel.Gui
 {
+    /// <summary>
+    /// eine box in welche man schreiben kann
+    /// </summary>
     public class GuiTextBox : GuiComponent
     {
         protected Animation animation;
         protected float time;
         protected string text = "";
         protected string token;
+        public event EventHandler<string> OnTextChange;
 
+        /// <summary>
+        /// geschriebener text
+        /// </summary>
         public string Text { get => text; set => text = value; }
 
+        /// <summary>
+        /// name der box
+        /// </summary>
+        /// <param name="name"></param>
         public GuiTextBox(string name)
         {
             this.Name = name;
@@ -27,17 +39,28 @@ namespace FragenGerangel.Gui
             animation.Fire();
         }
 
+        /// <summary>
+        /// verarbeitet den input und verändert den text
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void GuiTextBox_OnKeyPress(object sender, char e)
         {
+            string prev = text;
             if (e != 8)
             {
-                if(char.IsLetterOrDigit(e) && e < 122)
+                if (char.IsLetterOrDigit(e) && e < 122)
                     text += e;
             }
             else if (text.Length >= 1)
                 text = text.Substring(0, text.Length - 1);
+            if(prev != text)
+                OnTextChange?.Invoke(this, Text);
         }
 
+        /// <summary>
+        /// zeichnet die box
+        /// </summary>
         public override void OnRender()
         {
             if (animation.Finished && Selected && animation.Incremental)
@@ -45,7 +68,7 @@ namespace FragenGerangel.Gui
             if (animation.Finished && !Selected && !animation.Incremental && text.Length == 0)
                 animation.Reverse();
             time += StateManager.delta;
-            if (Selected && time >= 0.5)
+            if (Selected && time >= 0.5)//jede 0.5 sek wird '_' dem text hinzugefügt
             {
                 time = 0;
                 token = token == "_" ? " " : "_";

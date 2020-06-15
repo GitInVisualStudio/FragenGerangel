@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui
 {
+    /// <summary>
+    /// button mit text welcher klickbar ist
+    /// </summary>
     public class GuiButton : GuiComponent
     {
         private const float DEFAULT_WIDTH = 100; 
@@ -19,7 +22,9 @@ namespace FragenGerangel.Gui
         private Color currentColor;
         private Animation animation;
         private Vector point;
+        protected float var1 = 0, var2 = 0;
 
+        //individuelle render methode
         public Action CustomRender
         {
             get
@@ -59,51 +64,98 @@ namespace FragenGerangel.Gui
             }
         }
 
-        //TODO: den kack mit den Size fixen lol idk wie ich es machen soll
+        /// <summary>
+        /// text des buttons
+        /// </summary>
+        /// <param name="name"></param>
         public GuiButton(string name) : base(0, 0)
         {
             Name = name;
         }
 
+        /// <summary>
+        /// event beim drücken des button
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="click"></param>
         public GuiButton(string name, Action<Vector> click) : base(0, 0)
         {
             Name = name;
             OnClick += (object sender, Vector location) => click.Invoke(location); //Like wtf ?? OnClick += click;
         }
 
-        private void GuiButton_OnClick(object sender, Vector e)
-        {
-            point = e;
-            animation.Reset();
-            animation.Fire();
-        }
-
+        /// <summary>
+        /// initialisiert alle events
+        /// </summary>
         public override void Init()
         {            
             base.Init();
-            OnClick += GuiButton_OnClick;
             animation = new Animation();
             animation.Speed /= 2;
             animation.Stop();
             CurrentColor = BackColor;
             OnKeyPress += GuiButton_OnKeyPress;
+            OnEnter += GuiButton_OnEnter;
+            OnLeave += GuiButton_OnLeave;
         }
 
+        /// <summary>
+        /// animation beim überfahren des buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GuiButton_OnLeave(object sender, Vector e)
+        {
+            var2 = 0;
+        }
+
+        /// <summary>
+        /// animation beim überfahren des buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GuiButton_OnEnter(object sender, Vector e)
+        {
+            var2 = 0.2f;
+        }
+
+        /// <summary>
+        /// wenn enter gedrückt wird und der button ausgewählt ist, wird sein event aufgerufen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GuiButton_OnKeyPress(object sender, char e)
         {
             if (e == 13)
                 Component_OnClick(new Vector(0, 0));
         }
 
+        /// <summary>
+        /// Zeichnen des buttons
+        /// </summary>
         public override void OnRender()
         {
-            //throw new NotImplementedException();
-            //TODO: Render the shit
+
+            //übergang der fabe
+            int r = CurrentColor.R + (int)((BackColor.R - CurrentColor.R) * StateManager.delta * 5);
+            int g = CurrentColor.G + (int)((BackColor.G - CurrentColor.G) * StateManager.delta * 5);
+            int b = CurrentColor.B + (int)((BackColor.B - CurrentColor.B) * StateManager.delta * 5);
+            r = Math.Abs(r % 256);
+            g = Math.Abs(g % 256);
+            b = Math.Abs(b % 256);
+            CurrentColor = Color.FromArgb(r, g, b);
+
             if (CustomRender == null)
             {
-                int r = CurrentColor.R - (int)(CurrentColor.R * 0.3f);
-                int g = CurrentColor.G - (int)(CurrentColor.G * 0.3f);
-                int b = CurrentColor.B - (int)(CurrentColor.B * 0.3f);
+                var1 += (var2 - var1) * StateManager.delta * 10;
+                r = CurrentColor.R - (int)(CurrentColor.R * (0.3f + var1));
+                g = CurrentColor.G - (int)(CurrentColor.G * (0.3f + var1));
+                b = CurrentColor.B - (int)(CurrentColor.B * (0.3f + var1));
+                r = Math.Abs(r % 256);
+                g = Math.Abs(g % 256);
+                b = Math.Abs(b % 256);
+                StateManager.SetColor(0, 0, 0, 50);
+                StateManager.FillRoundRect(Location, Size + new Vector(2, 2), 10);
                 StateManager.FillGradientRoundRect(Location, Size, CurrentColor, Color.FromArgb(r,g,b), 90, 10);
                 StateManager.SetColor(FontColor);
                 StateManager.SetFont(FontUtils.DEFAULT_FONT);
