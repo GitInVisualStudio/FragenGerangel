@@ -71,6 +71,7 @@ namespace FragenGerangel
         /// <returns></returns>
         private string[] GetAccount()
         {
+            return null;
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
             if (!File.Exists(path))
                 return null;

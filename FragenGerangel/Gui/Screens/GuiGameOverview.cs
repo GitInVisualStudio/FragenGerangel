@@ -114,6 +114,7 @@ namespace FragenGerangel.Gui.Screens
                     fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
                     return;
                 }
+                Globals.APIManager.GetGame(game).Wait();
                 if (game.LastRound.Category == null)//wenn die kategorie der runde noch nicht gesetzt wurde wird diese ausgewählt
                 {
                     GuiCategory category = new GuiCategory(game);

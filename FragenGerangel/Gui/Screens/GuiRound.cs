@@ -25,6 +25,7 @@ namespace FragenGerangel.Gui.Screens
         private bool renderEnemyAnswer;
         private string question;
         private QuestionAnswer questionAnswer;
+        private float time;
 
         public event EventHandler<int> OnRoundClose; //wenn die runde beendet wird
         private Game game;
@@ -64,9 +65,9 @@ namespace FragenGerangel.Gui.Screens
                         var1.Add(var2);
                 }
             }
+            correct = 0;
             original = answers;
             answers = var1.ToArray();
-            correct = var1.IndexOf(answers[0]);
             Components.Add(new GuiButton("Weiter")
             {
                 Size = new Vector(-27, 100),
@@ -85,7 +86,7 @@ namespace FragenGerangel.Gui.Screens
                 RWidth = 1 / 2f,
                 RHeight = 1 / 4f,
                 FontColor = Color.White,
-                BackColor = Color.FromArgb(30, 80, 150)
+                BackColor = Color.FromArgb(78, 99, 131)
             });
             Components.Add(new GuiButton(Answers[1])
             {
@@ -96,7 +97,7 @@ namespace FragenGerangel.Gui.Screens
                 RWidth = 1 / 2f,
                 RHeight = 1 / 4f,
                 FontColor = Color.White,
-                BackColor = Color.FromArgb(30, 80, 150)
+                BackColor = Color.FromArgb(78, 99, 131)
             });
             Components.Add(new GuiButton(Answers[2])
             {
@@ -106,7 +107,7 @@ namespace FragenGerangel.Gui.Screens
                 RWidth = 1 / 2f,
                 RHeight = 1 / 4f,
                 FontColor = Color.White,
-                BackColor = Color.FromArgb(30, 80, 150)
+                BackColor = Color.FromArgb(78, 99, 131)
             });
             Components.Add(new GuiButton(Answers[3])
             {
@@ -117,7 +118,7 @@ namespace FragenGerangel.Gui.Screens
                 RWidth = 1 / 2f,
                 RHeight = 1 / 4f,
                 FontColor = Color.White,
-                BackColor = Color.FromArgb(30, 80, 150)
+                BackColor = Color.FromArgb(78, 99, 131)
             });
 
             foreach(GuiComponent component in Components)
@@ -153,6 +154,7 @@ namespace FragenGerangel.Gui.Screens
                 Globals.APIManager.UploadQuestionAnswer(QuestionAnswer).Wait();
                 Answered = true;
                 //setzen der farben der buttons
+                GetComponent<GuiButton>(original[correct]).BackColor = Color.LawnGreen;
                 if (button.Name == original[correct])
                 {
                     button.BackColor = Color.LawnGreen;
@@ -212,6 +214,41 @@ namespace FragenGerangel.Gui.Screens
             StateManager.SetColor(c1.R, c1.G, c1.B, 100);
             StateManager.FillCircle(Size.X - 150, height / 2, 70);
             RenderUtils.DrawPlayer(game.RemotePlayer.Name, new Vector(Size.X - 150, height / 2), 60);
+
+            time += StateManager.delta;
+            if(time > 10)
+            {
+                if(!Answered)
+                {
+                    Answered = true;
+                    renderEnemyAnswer = true;
+                    Answer = 1;
+                    QuestionAnswer.AnswerPlayer = Answer;
+                    //updaten der antwort
+                    new Thread(() =>
+                    {
+                        Globals.APIManager.UploadQuestionAnswer(QuestionAnswer).Wait();
+                    }).Start();
+                    //setzen der farben der buttons
+                    GetComponent<GuiButton>(original[correct]).BackColor = Color.LawnGreen;
+                    if (QuestionAnswer.AnswerRemotePlayer != -1)
+                    {
+                        GuiButton button = GetComponent<GuiButton>(original[QuestionAnswer.AnswerRemotePlayer]);
+                        if (button.Name == original[correct])
+                        {
+                            button.BackColor = Color.LawnGreen;
+                        }
+                        else
+                        {
+                            button.BackColor = Color.Red;
+                        }
+                    }
+                    GetComponent<GuiButton>("Weiter").BackColor = Color.LawnGreen;
+                }
+                time = 10;
+            }
+            StateManager.SetColor(46, 143, 234);
+            StateManager.FillRoundRect(50, Size.Y / 2 - 50, (Size.X - 17 - 100) * (time / 10.0f), 20);
 
             //zeichnen der antwort des gegners wenn spieler geantwortet hat
             if (renderEnemyAnswer)
