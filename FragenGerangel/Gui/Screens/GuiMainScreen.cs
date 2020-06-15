@@ -306,9 +306,9 @@ namespace FragenGerangel.Gui.Screens
         /// <returns></returns>
         private async Task Update()
         {
-            gameRequests = await Globals.APIManager.GetDuelRequests();
-            games = await Globals.APIManager.GetGames();
-            friendRequests = await Globals.APIManager.GetFriendRequests();
+            gameRequests = await Globals.APIManager.GetDuelRequests().ConfigureAwait(false);
+            games = await Globals.APIManager.GetGames().ConfigureAwait(false);
+            friendRequests = await Globals.APIManager.GetFriendRequests().ConfigureAwait(false);
         }
 
         /// <summary>
