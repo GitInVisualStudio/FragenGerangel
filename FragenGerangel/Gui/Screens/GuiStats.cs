@@ -40,7 +40,23 @@ namespace FragenGerangel.Gui.Screens
         /// </summary>
         public override void Init()
         {
+
+            Components.Add(new GuiButton("Ausloggen")
+            {
+                Location = new Vector(-17 - 20 - 100, 100),
+                Size = new Vector(100, 50),
+                BackColor = Color.LawnGreen,
+                FontColor = Color.White,
+                RX = 1.0f
+            });
+            GetComponent<GuiButton>("Ausloggen").OnClick += (object sender, Vector e) =>
+            {
+                Globals.Player = null;
+                fragenGerangel.OpenScreen(new GuiLogin(fragenGerangel));
+            };
+
             base.Init();
+
             Task<Statistic> task = Globals.APIManager.GetStatistics(player);
             task.Wait();
             stats = task.Result;
@@ -64,7 +80,6 @@ namespace FragenGerangel.Gui.Screens
         /// </summary>
         public override void OnRender()
         {
-            base.OnRender();
             Color c1 = Color.FromArgb(255, 2, 175, 230);
             Color c2 = Color.FromArgb(255, 84, 105, 230);
             int offset = 50;
@@ -85,6 +100,7 @@ namespace FragenGerangel.Gui.Screens
             StateManager.DrawString("Elo: " + stats.ELO.ToString(), 200, height / 2);
             StateManager.FillRect(200 - 5, -height/2, 2, height * 2);
             StateManager.Pop();
+            base.OnRender();
 
             float r = 200, margin = 50;
             StateManager.Push();

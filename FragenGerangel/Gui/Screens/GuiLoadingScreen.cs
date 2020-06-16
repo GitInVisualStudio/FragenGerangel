@@ -68,7 +68,7 @@ namespace FragenGerangel.Gui.Screens
                 flag = false;
                 new Thread(() =>
                 {
-                    while (Globals.APIManager == null && current != null) //warten auf die API => async
+                    while (Globals.Player == null && current != null && (next.GetType() != typeof(GuiRegister) && next.GetType() != typeof(GuiLogin))) //warten auf die API => async
                         Thread.Sleep(100);
                     next.SetLocationAndSize(this, Size);
                     next.Init();

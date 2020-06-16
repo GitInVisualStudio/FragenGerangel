@@ -57,7 +57,8 @@ namespace FragenGerangel
                 OpenScreen(new GuiLogin(this));
             else
             {
-                Globals.APIManager = new APIManager(account[0], account[1]);
+                Globals.APIManager = new APIManager();
+                Globals.APIManager.Login(account[0], account[1]).Wait();
                 while (Globals.APIManager == null)
                     Thread.Sleep(100);
                 OpenScreen(new GuiMainScreen(this));

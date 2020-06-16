@@ -13,26 +13,17 @@ using System.Threading.Tasks;
 
 namespace FragenGerangel.Gui.Screens
 {
-    /// <summary>
-    /// Screen zum einloggen und registrieren
-    /// </summary>
-    public class GuiLogin : GuiScreen
+    public class GuiRegister : GuiScreen
     {
+
         private FragenGerangel fragenGerangel;
         private string displayText = "";//info text
 
-        /// <summary>
-        /// spiel instanz für das setzten des spielers
-        /// </summary>
-        /// <param name="fragenGerangel"></param>
-        public GuiLogin(FragenGerangel fragenGerangel) : base()
+        public GuiRegister(FragenGerangel fragenGerangel) : base()
         {
             this.fragenGerangel = fragenGerangel;
         }
 
-        /// <summary>
-        /// erstellt die notwendigen komponenten
-        /// </summary>
         public override void Init()
         {
             Components.Add(new GuiTextBox("Username")
@@ -41,7 +32,7 @@ namespace FragenGerangel.Gui.Screens
                 RY = 0.5f,
                 BackColor = Color.LawnGreen,
                 Size = new Vector(300, 50),
-                Location = new Vector(-150, -110),
+                Location = new Vector(-150, -110 - 55),
                 FontColor = Color.White
             });
             Components.Add(new GuiPasswordBox("Passwort")
@@ -50,10 +41,19 @@ namespace FragenGerangel.Gui.Screens
                 RY = 0.5f,
                 BackColor = Color.LawnGreen,
                 Size = new Vector(300, 50),
+                Location = new Vector(-150, -110),
+                FontColor = Color.White
+            });
+            Components.Add(new GuiPasswordBox("Wiederholen")
+            {
+                RX = 0.5f,
+                RY = 0.5f,
+                BackColor = Color.LawnGreen,
+                Size = new Vector(300, 50),
                 Location = new Vector(-150, -55),
                 FontColor = Color.White
             });
-            Components.Add(new GuiButton("Login")
+            Components.Add(new GuiButton("Registrieren")
             {
                 RX = 0.5f,
                 RY = 0.5f,
@@ -62,7 +62,7 @@ namespace FragenGerangel.Gui.Screens
                 Location = new Vector(-150, 0),
                 FontColor = Color.White
             });
-            Components.Add(new GuiButton("Registration")
+            Components.Add(new GuiButton("Zurück")
             {
                 RX = 0.5f,
                 RY = 0.5f,
@@ -71,15 +71,10 @@ namespace FragenGerangel.Gui.Screens
                 Location = new Vector(-150, 55),
                 FontColor = Color.White
             });
-            GetComponent<GuiButton>("Login").OnClick += GuiLogin_OnClick;
-            GetComponent<GuiButton>("Registration").OnClick += OnRegister; ;
+            GetComponent<GuiButton>("Zurück").OnClick += (object sender, Vector location) => fragenGerangel.OpenScreen(new GuiLogin(fragenGerangel));
+            GetComponent<GuiButton>("Registrieren").OnClick += GuiLogin_OnClick;
 
             base.Init();
-        }
-
-        private void OnRegister(object sender, Vector e)
-        {
-            fragenGerangel.OpenScreen(new GuiRegister(fragenGerangel));
         }
 
         /// <summary>
@@ -92,14 +87,20 @@ namespace FragenGerangel.Gui.Screens
         {
             string password = GetComponent<GuiTextBox>("Passwort").Text;
             string username = GetComponent<GuiTextBox>("Username").Text;
-            if(password.Length >= 5 && username.Length >= 3)
+            string password2 = GetComponent<GuiTextBox>("Wiederholen").Text;
+            if(!password2.Equals(password))
+            {
+                displayText = "Passwort ist nicht identisch";
+                return;    
+            }
+            if (password.Length >= 5 && username.Length >= 3)
             {
                 displayText = "loggin in...";
                 new Thread(() =>
                 {
                     File.WriteAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat", new string[] { username, password });
                     Globals.APIManager = new APIManager();
-                    Globals.APIManager.Login(username, password).Wait();
+                    Globals.APIManager.CreateUser(username, password).Wait();
                 }).Start();
                 fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
             }
@@ -109,9 +110,7 @@ namespace FragenGerangel.Gui.Screens
             }
         }
 
-        /// <summary>
-        /// Zeichnet die komponenten
-        /// </summary>
+
         public override void OnRender()
         {
             Color c1 = Color.FromArgb(255, 2, 175, 230);

@@ -28,27 +28,13 @@ namespace FragenGerangel.Utils.API
         private string auth;
         private DateTime authSince; // Zeitpunkt, zu dem das Token erhalten wurde
 
-        public APIManager(string username, string password)
+        public async Task Login(string username, string password)
         {
             this.username = username;
             this.password = password;
-
-            Init().Wait();
-            Globals.Player = new Player(username);
-        }
-
-        private async Task Init()
-        {
-            try
-            {
-                await CreateUser().ConfigureAwait(false);
-            }
-            catch
-            {
-
-            }
             auth = await GetAuthToken().ConfigureAwait(false);
             authSince = DateTime.Now;
+            Globals.Player = new Player(username);
         }
 
         /// <summary>
@@ -66,7 +52,7 @@ namespace FragenGerangel.Utils.API
         private async Task<JObject> PostReturnJson(string uri, JObject json)
         {
             if (uri != "getAuthToken.php" && uri != "createUser.php" && DateTime.Now - authSince >= new TimeSpan(24, 0, 0))
-                Init().Wait();
+                Login(username, password).Wait();
             string resultStr = await Post(uri, json).ConfigureAwait(false);
             Console.WriteLine(resultStr);
             JObject resultJson = JObject.Parse(resultStr);
@@ -78,12 +64,17 @@ namespace FragenGerangel.Utils.API
         /// <summary>
         /// Erstellt einen neuen Benutzer mit den gespeicherten Daten. Wirft IllegalOperationException, wenn der Benutzer schon existiert
         /// </summary>
-        private async Task CreateUser()
+        public async Task CreateUser(string username, string password)
         {
+            this.username = username;
+            this.password = password;
             JObject json = new JObject();
             json["username"] = username;
             json["password"] = password;
             await PostReturnJson("createUser.php", json).ConfigureAwait(false);
+            auth = await GetAuthToken().ConfigureAwait(false);
+            authSince = DateTime.Now;
+            Globals.Player = new Player(username);
         }
 
         /// <summary>
