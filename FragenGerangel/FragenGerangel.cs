@@ -53,7 +53,7 @@ namespace FragenGerangel
             FontUtils.Init(this);
             //öffnet den loginscreen falls keine accountdaten vorhanden sind
             string[] account;
-            if ((account = GetAccount()) == null)
+            if ((account = GetAccount()) == null || account.Length < 2)
                 OpenScreen(new GuiLogin(this));
             else
             {

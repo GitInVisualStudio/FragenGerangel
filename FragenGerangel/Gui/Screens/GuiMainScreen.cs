@@ -22,9 +22,8 @@ namespace FragenGerangel.Gui.Screens
         private Player[] gameRequests, friendRequests;
         private Game[] games;
         private bool update;
-        private int scroll;
+        private float scroll;
         private float scrollDelta;
-        private bool shouldScroll;
 
         /// <summary>
         /// Spiel instanz für aktualisierungen
@@ -157,12 +156,11 @@ namespace FragenGerangel.Gui.Screens
         public override void OnSroll(int direction)
         {
             base.OnSroll(direction);
-            if(shouldScroll && direction > 0)
+            direction = direction / 2;
+            if(direction > 0)
                 scroll += direction;
             else if(direction < 0)
                 scroll += direction;
-            if (scroll < 0)
-                scroll = 0;
         }
 
         /// <summary>
@@ -353,10 +351,17 @@ namespace FragenGerangel.Gui.Screens
         public override void OnRender()
         {
             StateManager.Push();
+            if(scroll < 0)
+            {
+                if(scroll < -300 && animation.Finished)
+                {
+                    fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
+                }
+                scroll -= scroll * StateManager.delta * 10;
+            }
             scrollDelta += (scroll - scrollDelta) * StateManager.delta * 10;
             StateManager.Translate(0, -scrollDelta); //versetzt um das scrolling
             int offset = 200;
-            shouldScroll = false;
             foreach (GuiComponent component in Components)
             {
                 if (component is GuiButton)
@@ -367,9 +372,9 @@ namespace FragenGerangel.Gui.Screens
                 component.Location = new Vector(component.Location.X, offset);
                 component.OnRender();
                 offset += (int)component.Size.Y + 30;
-                if (offset - scroll > Size.Y)
-                    shouldScroll = true;
             }
+            if(scroll > offset - Size.Y + 20)
+                scroll += (offset - Size.Y + 20 - scroll) * StateManager.delta * 10;
             StateManager.Pop();
 
             Color c1 = Color.FromArgb(255, 2, 175, 230);

@@ -25,9 +25,6 @@ namespace FragenGerangel.Gui
                 animation.Reverse();
             if (animation.Finished && !Selected && !animation.Incremental && text.Length == 0)
                 animation.Reverse();
-            string renderString = "";
-            foreach (char c in text)//zeichnen eines gleichlangen verdeckten strings
-                renderString += "*";
             Color c1 = Color.FromArgb(255, 2, 175, 230);
             Color c2 = Color.FromArgb(255, 84, 105, 230);
             StateManager.SetColor(Color.White);
@@ -42,6 +39,14 @@ namespace FragenGerangel.Gui
             StateManager.SetColor(Color.Black);
             font = new Font("Arial", 15);
             StateManager.SetFont(font);
+
+            if (StateManager.GetStringWidth(text) + 10 > Size.X)
+                text = text.Substring(0, text.Length - 1);
+
+            string renderString = "";
+            foreach (char c in text)//zeichnen eines gleichlangen verdeckten strings
+                renderString += "*";
+
             StateManager.DrawString(renderString, Location.X + 5, Location.Y + Size.Y / 2);
         }
     }

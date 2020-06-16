@@ -22,6 +22,7 @@ namespace FragenGerangel.Gui
         private Color currentColor;
         private Animation animation;
         private Vector point;
+        private bool prevSelected;
         protected float var1 = 0, var2 = 0;
 
         //individuelle render methode
@@ -135,7 +136,16 @@ namespace FragenGerangel.Gui
         /// </summary>
         public override void OnRender()
         {
-
+            if (Selected)
+            {
+                var2 = 0.2f;
+                prevSelected = true;
+            }
+            else if (prevSelected)
+            {
+                var2 = 0f;
+                prevSelected = false;
+            }
             //übergang der fabe
             int r = CurrentColor.R + (int)((BackColor.R - CurrentColor.R) * StateManager.delta * 5);
             int g = CurrentColor.G + (int)((BackColor.G - CurrentColor.G) * StateManager.delta * 5);

@@ -68,14 +68,6 @@ namespace FragenGerangel.Gui
             if (animation.Finished && !Selected && !animation.Incremental && text.Length == 0)
                 animation.Reverse();
             time += StateManager.delta;
-            if (Selected && time >= 0.5)//jede 0.5 sek wird '_' dem text hinzugefügt
-            {
-                time = 0;
-                token = token == "_" ? " " : "_";
-            }
-            else if (!Selected)
-                token = "";
-            string renderString = text + token;
             Color c1 = Color.FromArgb(255, 2, 175, 230);
             Color c2 = Color.FromArgb(255, 84, 105, 230);
             StateManager.SetColor(Color.White);
@@ -90,6 +82,19 @@ namespace FragenGerangel.Gui
             StateManager.SetColor(Color.Black);
             font = new Font("Arial", 12, FontStyle.Bold);
             StateManager.SetFont(font);
+
+            if (StateManager.GetStringWidth(text) + 10 > Size.X)
+                text = text.Substring(0, text.Length - 1);
+
+            if (Selected && time >= 0.5)//jede 0.5 sek wird '_' dem text hinzugefügt
+            {
+                time = 0;
+                token = token == "_" ? " " : "_";
+            }
+            else if (!Selected)
+                token = "";
+            string renderString = text + token;
+
             StateManager.DrawString(renderString, Location.X + 5, Location.Y + Size.Y / 2);
         }
     }

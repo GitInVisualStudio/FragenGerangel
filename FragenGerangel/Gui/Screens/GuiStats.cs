@@ -5,6 +5,7 @@ using FragenGerangel.Utils.Render;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,6 +53,8 @@ namespace FragenGerangel.Gui.Screens
             GetComponent<GuiButton>("Ausloggen").OnClick += (object sender, Vector e) =>
             {
                 Globals.Player = null;
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
+                File.WriteAllText(path, "");
                 fragenGerangel.OpenScreen(new GuiLogin(fragenGerangel));
             };
 
