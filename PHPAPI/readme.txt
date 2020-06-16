@@ -63,6 +63,9 @@ output:
 		int gameID // id des Spiels
 		string username // gegen wen gespielt wird
 		bool active
+		int yourScore
+		int enemyScore
+		bool yourTurn
 	]
 beschreibung:
 	gibt alle laufenden Spiele des Aufrufenden zurück

@@ -28,6 +28,8 @@ namespace FragenGerangel.Gui
         {
             Game = game;
             OnClick += GuiGameInfo_OnClick;
+            if (!game.Active)
+                return;
             Round round = game.LastRound;
             //setzen welche person dran ist
             Remote = true;

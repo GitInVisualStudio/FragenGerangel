@@ -15,6 +15,8 @@ namespace FragenGerangel.GameBase
         private int onlineID;
         private float? eloChange;
         private bool active;
+        private int scorePlayer;
+        private int scoreRemotePlayer;
 
         /// <summary>
         /// Der Gegenspieler
@@ -71,6 +73,8 @@ namespace FragenGerangel.GameBase
         {
             get
             {
+                if (rounds[0] == null)
+                    return scorePlayer;
                 int score = 0;
                 foreach (Round r in rounds)
                     if (r != null && r.Questions != null)
@@ -79,6 +83,7 @@ namespace FragenGerangel.GameBase
                                 score++;
                 return score;
             }
+            set => scorePlayer = value;
         }
 
         /// <summary>
@@ -88,6 +93,8 @@ namespace FragenGerangel.GameBase
         {
             get
             {
+                if (rounds[0] == null)
+                    return scoreRemotePlayer;
                 int score = 0;
                 foreach (Round r in rounds)
                     if (r != null && r.Questions != null)
@@ -96,6 +103,7 @@ namespace FragenGerangel.GameBase
                                 score++;
                 return score;
             }
+            set => scoreRemotePlayer = value;
         }
 
         /// <summary>

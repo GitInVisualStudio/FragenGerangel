@@ -27,10 +27,23 @@ function start(array $post) : array {
 	$games = [];
 	for ($i = 0; $i < sizeof($result); $i++) {
 		$row = $result[$i];
+		$player_1 = $row["player_1"] == $username;
 		$games[$i] = [];
 		$games[$i]["gameID"] = $row["id"];
-		$games[$i]["username"] = $row["player_1"] == $username ? $row["player_2"] : $row["player_1"];
+		$games[$i]["username"] = $player_1 ? $row["player_2"] : $row["player_1"];
 		$games[$i]["active"] = $row["won_by"] == null ? true : false;
+		
+		if ($games[$i]["active"]) {
+			$result2 = $connection->query("SELECT g.player_1 AS player_1, g.player_2 AS player_2, q.answer_player_1 AS answer_player_1, q.answer_player_2 AS answer_player_2 FROM game g INNER JOIN `round` r ON r.game = g.id LEFT JOIN question_answer q ON q.`round` = r.id WHERE g.id = '{$games[$i]["gameID"]}' ORDER BY r.`order`, q.`order`");
+			$row2 = $result2[0];
+			$games[$i]["yourTurn"] = ($player_1 && $row2["answer_player_1"] == null) || (!$player_1 && $row2["answer_player_2"] == null);
+		}
+		$result2 = $connection->query("SELECT * FROM game g INNER JOIN `round` r ON r.game = g.id INNER JOIN question_answer q ON q.`round` = r.id WHERE g.id = '{$games[$i]["gameID"]}' AND answer_player_1 = 0 AND answer_player_2 IS NOT null");
+		$score_player_1 = sizeof($result2);
+		$result2 = $connection->query("SELECT * FROM game g INNER JOIN `round` r ON r.game = g.id INNER JOIN question_answer q ON q.`round` = r.id WHERE g.id = '{$games[$i]["gameID"]}' AND answer_player_2 = 0 AND answer_player_1 IS NOT null");
+		$score_player_2 = sizeof($result2);
+		$games[$i]["yourScore"] = $player_1 ? $score_player_1 : $score_player_2;
+		$games[$i]["enemyScore"] = $player_1 ? $score_player_2 : $score_player_1;
 	}
 	
 	$result = ["result" => "ok", "games" => $games];

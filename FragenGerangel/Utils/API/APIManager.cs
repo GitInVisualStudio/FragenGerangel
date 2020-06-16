@@ -68,7 +68,7 @@ namespace FragenGerangel.Utils.API
             if (uri != "getAuthToken.php" && uri != "createUser.php" && DateTime.Now - authSince >= new TimeSpan(24, 0, 0))
                 Init().Wait();
             string resultStr = await Post(uri, json).ConfigureAwait(false);
-            //Console.WriteLine(resultStr);
+            Console.WriteLine(resultStr);
             JObject resultJson = JObject.Parse(resultStr);
             if (resultJson["result"].ToString() != "ok")
                 throw APIExceptionManager.FromID(resultJson["error_code"].ToObject<int>());
@@ -176,8 +176,15 @@ namespace FragenGerangel.Utils.API
                 Player p = new Player(resultJson["games"][i]["username"].ToObject<string>());
                 int onlineID = resultJson["games"][i]["gameID"].ToObject<int>();
                 bool active = resultJson["games"][i]["active"].ToObject<bool>();
-                res[i] = new Game(p, onlineID);
-                res[i].Active = active;
+                int scorePlayer = resultJson["games"][i]["yourScore"].ToObject<int>();
+                int scoreRemotePlayer = resultJson["games"][i]["enemyScore"].ToObject<int>();
+                res[i] = new Game(p, onlineID)
+                {
+                    Active = active,
+                    ScorePlayer = scorePlayer,
+                    ScoreRemotePlayer = scoreRemotePlayer
+                };
+            
             }
             return res;
         }
@@ -301,7 +308,8 @@ namespace FragenGerangel.Utils.API
         {
             Game[] games = await GetDuelIDs().ConfigureAwait(false);
             foreach (Game g in games)
-                await GetGame(g).ConfigureAwait(false);
+                if (g.Active)
+                    await GetGame(g).ConfigureAwait(false);
             return games;
         }
 
