@@ -51,8 +51,6 @@ function start(array $post) : array {
 
     $hash = Globals::hashAndSalt($password, $salt);
 
-	Globals::logStr("{$username} tried to create user");
-
 	$result = $connection->select("user", ["username"], "`username` = '{$username}'");
 
 	if (sizeof($result) != 0)
@@ -84,11 +82,9 @@ try {
 } catch (Exception $e) {
 
     $array = ["result" => "error", "error_message" => $e->getMessage(), "error_code" => $e->getCode()];
-	Globals::logStr("Exception! " . json_encode($array));
 }
 
 
 
 echo json_encode($array);
-Globals::logStr("createUser.php finished");
     

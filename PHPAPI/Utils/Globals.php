@@ -132,11 +132,5 @@ class Globals
 		unset($arr[$index]);
 		return $value;
 	}
-	
-	static function logStr(string $s) {
-		$file_contents = file_get_contents("log.log");
-		$file_contents .= dateTimeNow() . ": " . $s;
-		file_put_contents("log.log", $file_contents);
-	}
 }
 

@@ -38,6 +38,8 @@ function start(array $post) : array {
 			$row2 = $result2[0];
 			$games[$i]["yourTurn"] = ($player_1 && $row2["answer_player_1"] == null) || (!$player_1 && $row2["answer_player_2"] == null);
 		}
+		else
+			$games[$i]["yourTurn"] = false;
 		$result2 = $connection->query("SELECT * FROM game g INNER JOIN `round` r ON r.game = g.id INNER JOIN question_answer q ON q.`round` = r.id WHERE g.id = '{$games[$i]["gameID"]}' AND answer_player_1 = 0 AND answer_player_2 IS NOT null");
 		$score_player_1 = sizeof($result2);
 		$result2 = $connection->query("SELECT * FROM game g INNER JOIN `round` r ON r.game = g.id INNER JOIN question_answer q ON q.`round` = r.id WHERE g.id = '{$games[$i]["gameID"]}' AND answer_player_2 = 0 AND answer_player_1 IS NOT null");
