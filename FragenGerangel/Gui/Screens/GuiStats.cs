@@ -42,7 +42,9 @@ namespace FragenGerangel.Gui.Screens
         public override void Init()
         {
 
-            Components.Add(new GuiButton("Ausloggen")
+            if (player.Name == Globals.Player.Name)
+            {
+                Components.Add(new GuiButton("Ausloggen")
             {
                 Location = new Vector(-17 - 20 - 100, 100),
                 Size = new Vector(100, 50),
@@ -50,13 +52,14 @@ namespace FragenGerangel.Gui.Screens
                 FontColor = Color.White,
                 RX = 1.0f
             });
-            GetComponent<GuiButton>("Ausloggen").OnClick += (object sender, Vector e) =>
-            {
-                Globals.Player = null;
-                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
-                File.WriteAllText(path, "");
-                fragenGerangel.OpenScreen(new GuiLogin(fragenGerangel));
-            };
+                GetComponent<GuiButton>("Ausloggen").OnClick += (object sender, Vector e) =>
+                {
+                    Globals.Player = null;
+                    string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat";
+                    File.WriteAllText(path, "");
+                    fragenGerangel.OpenScreen(new GuiLogin(fragenGerangel));
+                };
+            }
 
             base.Init();
 

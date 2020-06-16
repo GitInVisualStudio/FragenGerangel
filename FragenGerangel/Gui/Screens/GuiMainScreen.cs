@@ -373,8 +373,9 @@ namespace FragenGerangel.Gui.Screens
                 component.OnRender();
                 offset += (int)component.Size.Y + 30;
             }
-            if(scroll > offset - Size.Y + 20)
-                scroll += (offset - Size.Y + 20 - scroll) * StateManager.delta * 10;
+            if(offset > Size.Y)
+                if(scroll > offset - Size.Y + 20)
+                    scroll += (offset - Size.Y + 20 - scroll) * StateManager.delta * 10;
             StateManager.Pop();
 
             Color c1 = Color.FromArgb(255, 2, 175, 230);
