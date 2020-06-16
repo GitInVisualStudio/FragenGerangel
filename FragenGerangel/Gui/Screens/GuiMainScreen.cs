@@ -373,6 +373,8 @@ namespace FragenGerangel.Gui.Screens
                 component.OnRender();
                 offset += (int)component.Size.Y + 30;
             }
+            if (scroll > 0 && offset < Size.Y)
+                scroll -= scroll * StateManager.delta * 10; 
             if(offset > Size.Y)
                 if(scroll > offset - Size.Y + 20)
                     scroll += (offset - Size.Y + 20 - scroll) * StateManager.delta * 10;
