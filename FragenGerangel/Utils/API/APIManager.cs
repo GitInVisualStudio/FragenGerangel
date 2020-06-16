@@ -178,11 +178,13 @@ namespace FragenGerangel.Utils.API
                 bool active = resultJson["games"][i]["active"].ToObject<bool>();
                 int scorePlayer = resultJson["games"][i]["yourScore"].ToObject<int>();
                 int scoreRemotePlayer = resultJson["games"][i]["enemyScore"].ToObject<int>();
+                bool yourTurn = resultJson["games"][i]["yourTurn"].ToObject<bool>();
                 res[i] = new Game(p, onlineID)
                 {
                     Active = active,
                     ScorePlayer = scorePlayer,
-                    ScoreRemotePlayer = scoreRemotePlayer
+                    ScoreRemotePlayer = scoreRemotePlayer,
+                    YourTurn = yourTurn
                 };
             
             }

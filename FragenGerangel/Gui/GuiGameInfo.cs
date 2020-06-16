@@ -30,17 +30,7 @@ namespace FragenGerangel.Gui
             OnClick += GuiGameInfo_OnClick;
             if (!game.Active)
                 return;
-            Round round = game.LastRound;
-            //setzen welche person dran ist
-            Remote = true;
-            if (round.Questions == null)
-                Remote = false;
-            else
-            {
-                foreach (QuestionAnswer question in round.Questions)
-                    if (question.AnswerPlayer == -1)
-                        Remote = false;
-            }
+            Remote = !game.YourTurn;
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ namespace FragenGerangel.GameBase
         private bool active;
         private int scorePlayer;
         private int scoreRemotePlayer;
+        private bool yourTurn;
 
         /// <summary>
         /// Der Gegenspieler
@@ -130,6 +131,8 @@ namespace FragenGerangel.GameBase
             }
             set => active = value; 
         }
+
+        public bool YourTurn { get => yourTurn; set => yourTurn = value; }
 
         public Game(Player remote, int onlineID)
         {

@@ -79,6 +79,7 @@ namespace FragenGerangel.Gui.Screens
         /// </summary>
         public override void Init()
         {
+            Globals.APIManager.GetGame(game).Wait();
             if (!game.Active)//wenn spiel zu ende kann man nicht mehr spielen
             {
                 Components.Add(new GuiButton("Zurück")
