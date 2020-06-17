@@ -358,8 +358,12 @@ namespace FragenGerangel.Utils.Render
         /// <returns></returns>
         public static PointF[] GetRoundRectPoints(float x, float y, float width, float height, float r, int res)
         {
-            if (height <= 0 || width <= 0)
-                return new PointF[0];
+            if (height < 1 || width < 1)
+            {
+                PointF[] p = new PointF[1];
+                p[0] = new PointF(x, y);
+                return p;
+            }
 
             PointF[] points = new PointF[res];
 
@@ -387,11 +391,15 @@ namespace FragenGerangel.Utils.Render
         /// <param name="res"></param>
         public static void FillGradientRoundRect(Vector location, Vector size, Color c1, Color c2, float angle = 0.0f, float r = 10, int res = 100)
         {
+            if (size.X < 1 || size.Y < 1)
+                return;
             g.FillPolygon(GetGradientBrush(location, size, c1, c2, angle), GetRoundRectPoints(location.X, location.Y, size.X, size.Y, r, res));
         }
 
-        private static LinearGradientBrush GetGradientBrush(Vector location, Vector size, Color c1, Color c2, float angle) 
-            => new LinearGradientBrush(new Rectangle((int)location.X, (int)location.Y, (int)size.X, (int)size.Y), c1, c2, angle);
+        private static LinearGradientBrush GetGradientBrush(Vector location, Vector size, Color c1, Color c2, float angle)
+        {
+            return new LinearGradientBrush(new Rectangle((int)location.X, (int)location.Y, (int)size.X, (int)size.Y), c1, c2, angle);
+        }
 
         /// <summary>
         /// zeichnet ein rechteck mit fabverlauf
