@@ -170,7 +170,6 @@ namespace FragenGerangel.Gui.Screens
         /// <param name="e"></param>
         private void HandleGameRequest(object sender, bool e)
         {
-            //TODO: accept / reject request and refresh
             GuiPlayerInfo info = (GuiPlayerInfo)sender;
             if (e)
             {
@@ -197,7 +196,6 @@ namespace FragenGerangel.Gui.Screens
         /// <param name="e"></param>
         private void HandleFriendRequest(object sender, bool e)
         {
-            //TODO: accept / reject request and refresh
             GuiPlayerInfo info = (GuiPlayerInfo)sender;
             if (e)
             {

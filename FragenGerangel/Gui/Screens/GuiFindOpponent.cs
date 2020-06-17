@@ -38,7 +38,6 @@ namespace FragenGerangel.Gui.Screens
         //wenn der spieler was in die suche eingibt
         private void GuiFindOpponent_OnTextChange(object sender, string e)
         {
-            //TODO: search for new Player
             if (e == null || e.Length == 0)
                 return;
             timer = 0;

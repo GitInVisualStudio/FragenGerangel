@@ -100,7 +100,7 @@ namespace FragenGerangel.Gui.Screens
                     Globals.APIManager = new APIManager();
                     try
                     {
-                        Globals.APIManager.Login(username, password).Wait(); //TODO: das try catchen
+                        Globals.APIManager.Login(username, password).Wait();
                     }
                     catch (Exception exc)
                     {

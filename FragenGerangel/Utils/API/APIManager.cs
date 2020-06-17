@@ -54,7 +54,6 @@ namespace FragenGerangel.Utils.API
             if (uri != "getAuthToken.php" && uri != "createUser.php" && DateTime.Now - authSince >= new TimeSpan(24, 0, 0))
                 Login(username, password).Wait();
             string resultStr = await Post(uri, json).ConfigureAwait(false);
-            Console.WriteLine(resultStr);
             JObject resultJson = JObject.Parse(resultStr);
             if (resultJson["result"].ToString() != "ok")
                 throw APIExceptionManager.FromID(resultJson["error_code"].ToObject<int>());
@@ -366,38 +365,6 @@ namespace FragenGerangel.Utils.API
             json["auth"] = auth;
             json["username"] = p.Name;
             await PostReturnJson("declineDuelRequest.php", json).ConfigureAwait(false);
-        }
-
-        Game[] games; // DEBUG
-        /// <summary>
-        /// Debug function, plays game with highest ID automatically for one round
-        /// </summary>
-        /// <returns></returns>
-        public async Task Test()
-        {
-            //Statistic s = await GetStatistics().ConfigureAwait(false);
-            if (games == null)
-                games = await GetGames().ConfigureAwait(false);
-            await GetGame(games.Last()).ConfigureAwait(false);
-            Game g = games.Last();
-            if (g.LastRound.Questions != null)
-                foreach (QuestionAnswer q in g.LastRound.Questions)
-                {
-                    q.AnswerPlayer = new Random().Next(4);
-                    float? eloChange = await UploadQuestionAnswer(q).ConfigureAwait(false);
-                    if (eloChange != null)
-                        Console.WriteLine("Elo-Change for this game for " + username + ": " + eloChange);
-                    g.EloChange = eloChange;
-                }
-
-            try
-            {
-                await ChooseCategory(g, new Random().Next(1, 4)).ConfigureAwait(false);
-            }
-            catch (InsufficientPermissionsException e)
-            {
-
-            }
         }
     }
 }
