@@ -34,7 +34,7 @@ function start(array $post) : array {
 		$games[$i]["active"] = $row["won_by"] == null ? true : false;
 		
 		if ($games[$i]["active"]) {
-			$result2 = $connection->query("SELECT g.player_1 AS player_1, g.player_2 AS player_2, q.answer_player_1 AS answer_player_1, q.answer_player_2 AS answer_player_2 FROM game g INNER JOIN `round` r ON r.game = g.id LEFT JOIN question_answer q ON q.`round` = r.id WHERE g.id = '{$games[$i]["gameID"]}' ORDER BY r.`order`, q.`order`");
+			$result2 = $connection->query("SELECT g.player_1 AS player_1, g.player_2 AS player_2, q.answer_player_1 AS answer_player_1, q.answer_player_2 AS answer_player_2 FROM game g INNER JOIN `round` r ON r.game = g.id LEFT JOIN question_answer q ON q.`round` = r.id WHERE g.id = '{$games[$i]["gameID"]}' ORDER BY r.`order` DESC, q.`order` DESC");
 			$row2 = $result2[0];
 			$games[$i]["yourTurn"] = ($player_1 && $row2["answer_player_1"] == null) || (!$player_1 && $row2["answer_player_2"] == null);
 		}

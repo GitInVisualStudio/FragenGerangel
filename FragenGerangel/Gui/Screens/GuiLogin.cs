@@ -72,7 +72,7 @@ namespace FragenGerangel.Gui.Screens
                 FontColor = Color.White
             });
             GetComponent<GuiButton>("Login").OnClick += GuiLogin_OnClick;
-            GetComponent<GuiButton>("Registration").OnClick += OnRegister; ;
+            GetComponent<GuiButton>("Registration").OnClick += OnRegister;
 
             base.Init();
         }
@@ -97,9 +97,9 @@ namespace FragenGerangel.Gui.Screens
                 displayText = "loggin in...";
                 new Thread(() =>
                 {
-                    File.WriteAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat", new string[] { username, password });
                     Globals.APIManager = new APIManager();
-                    Globals.APIManager.Login(username, password).Wait();
+                    Globals.APIManager.Login(username, password).Wait(); //TODO: das try catchen
+                    File.WriteAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat", new string[] { username, password });
                 }).Start();
                 fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
             }
