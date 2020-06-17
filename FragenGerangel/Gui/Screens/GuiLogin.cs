@@ -98,14 +98,22 @@ namespace FragenGerangel.Gui.Screens
                 new Thread(() =>
                 {
                     Globals.APIManager = new APIManager();
-                    Globals.APIManager.Login(username, password).Wait(); //TODO: das try catchen
+                    try
+                    {
+                        Globals.APIManager.Login(username, password).Wait(); //TODO: das try catchen
+                    }
+                    catch (Exception exc)
+                    {
+                        displayText = "Zugangsdaten nicht korrekt";
+                        return;
+                    }
                     File.WriteAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/login.dat", new string[] { username, password });
+                    fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
                 }).Start();
-                fragenGerangel.OpenScreen(new GuiMainScreen(fragenGerangel));
             }
             else
             {
-                displayText = "Username/Passwort zu kruz";
+                displayText = "Username/Passwort zu kurz";
             }
         }
 
@@ -121,7 +129,7 @@ namespace FragenGerangel.Gui.Screens
             StateManager.SetColor(Color.White);
             StateManager.DrawCenteredString("FragenGerangel", Size.X / 2, 100);
             StateManager.SetFont(new Font("Arial", 12));
-            StateManager.DrawCenteredString(displayText, Size.X / 2, 200);
+            StateManager.DrawCenteredString(displayText, Size.X / 2, 150);
             base.OnRender();
         }
     }

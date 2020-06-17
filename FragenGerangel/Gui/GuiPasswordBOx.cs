@@ -19,6 +19,17 @@ namespace FragenGerangel.Gui
         {
         }
 
+        protected override void GuiTextBox_OnKeyPress(object sender, char e)
+        {
+            if (e != 8)
+            {
+                if (!char.IsControl(e) && e != 34 && e != 39 && e != 92)
+                    text += e;
+            }
+            else if (text.Length >= 1)
+                text = text.Substring(0, text.Length - 1);
+        }
+
         public override void OnRender()
         {
             if (animation.Finished && Selected && animation.Incremental)

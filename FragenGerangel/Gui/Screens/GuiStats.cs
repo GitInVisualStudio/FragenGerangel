@@ -81,6 +81,12 @@ namespace FragenGerangel.Gui.Screens
             base.Panel_OnKeyRelease(sender, e);
         }
 
+        public override void Close()
+        {
+            animation.Speed = 3;
+            base.Close();
+        }
+
         /// <summary>
         /// Zeichnet die statistik
         /// </summary>
